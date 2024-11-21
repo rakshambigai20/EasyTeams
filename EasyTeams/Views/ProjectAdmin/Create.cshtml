@@ -1,0 +1,47 @@
+﻿@model EasyTeams.Data.Models.Domain.Project
+
+@{
+    ViewData["Title"] = "Create New Project";
+}
+
+<div class="card card-custom">
+    <div class="card-header bg-blue text-white rounded-top">
+        <h4>@ViewData["Title"]</h4>
+    </div>
+    <div class="card-body">
+        <!--Fields to create new project-->
+        <hr />
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="ProjectName" class="control-label"></label>
+                <input asp-for="ProjectName" class="form-control" />
+                <span asp-validation-for="ProjectName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Deadline" class="control-label"></label>
+                <input asp-for="Deadline" type="date" class="form-control" />
+                <span asp-validation-for="Deadline" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Description" class="control-label"></label>
+                <input asp-for="Description" class="form-control" />
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+            <hr />
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary dr-shadow2" />
+            </div>
+        </form>
+    </div>
+    <!--Button's redirection action->
+    <div class="card-footer rounded-bottom">
+        <a asp-controller="ProjectAdmin" asp-action="GetProjectsList" class="btn btn-secondary dr-shadow2">Back to Projects</a>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

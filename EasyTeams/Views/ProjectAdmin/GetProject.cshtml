@@ -1,0 +1,48 @@
+﻿@model EasyTeams.Data.Models.Domain.Project
+
+@{
+    ViewData["Title"] = "Project Details";
+}
+
+<div class="card card-custom">
+    <div class="card-header bg-blue text-white rounded-top">
+        <h4>@ViewData["Title"]</h4>
+    </div>
+    <!--Project details rendered based on project Id-->
+    <div class="card-body 
+        <hr />
+        <dl class="row">
+            <dt class="col-sm-4">
+                Project Name
+            </dt>
+            <dd class="col-sm-8">
+                @Html.DisplayFor(model => model.ProjectName)
+            </dd>
+            <dt class="col-sm-4">
+                Deadline
+            </dt>
+            <dd class="col-sm-8">
+                @Html.DisplayFor(model => model.Deadline)
+            </dd>
+            <dt class="col-sm-4">
+                Description
+            </dt>
+            <dd class="col-sm-8">
+                @Html.DisplayFor(model => model.Description)
+            </dd>
+        </dl>
+    </div>
+    
+</div>
+
+@* @if (Model.Tasks.Count != 0 && (User.IsInRole("Manager") || User.IsInRole("Admin")))
+{
+    @Html.Partial("~/Views/PTaskAdmin/GetPTasksList.cshtml", Model.Tasks, new ViewDataDictionary(ViewData) { { "ProjectId", Model.Id } })
+}
+
+@if (Model.Tasks.Count != 0 && (User.IsInRole("Manager") || User.IsInRole("Admin")))
+{
+    @Html.Partial("~/Views/PTaskAdmin/GetPTasksList.cshtml", Model.Tasks, new ViewDataDictionary(ViewData) { { "ProjectId", Model.Id } })
+} *@
+
+

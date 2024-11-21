@@ -1,0 +1,140 @@
+﻿@model EasyTeams.Data.Models.Domain.Leave
+
+@{
+    ViewData["Title"] = "Approve or Reject Leave";
+    @using EasyTeams.Data.Models.Domain;
+    @using EasyTeams.Services.IService;
+    @using EasyTeams.Services.Service;
+    IStaffService staffService = new StaffService();
+    IProjectService projectService = new ProjectService();
+    Staff staff = staffService.GetStaff(Model);
+}
+
+<div class="card card-custom">
+    <div class="card-header bg-blue text-white rounded-top">
+        <h4>@ViewData["Title"]</h4>
+    </div>
+    <div class="card-body">
+        <h5>Leave Details:</h5>
+        <!--Hidden imputs so leave details can be submitted but not edited-->
+        <form asp-action="ApproveReject">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            <input type="hidden" asp-for="RequestDate" />
+            <input type="hidden" asp-for="StartDate" />
+            <input type="hidden" asp-for="EndDate" />
+            <input type="hidden" asp-for="Sick" />
+            <input type="hidden" asp-for="Authorised" />
+            <input type="hidden" asp-for="AuthorisedDate" />
+            <input type="hidden" asp-for="Rejected" />
+            <dl class="row">
+        <!--Display Leave details-->
+                <dt class="col-sm-2">
+                    Request Date
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.RequestDate)
+                </dd>
+                <dt class="col-sm-2">
+                    Start Date
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.StartDate)
+                </dd>
+                <dt class="col-sm-2">
+                    End Date
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.EndDate)
+                </dd>
+                <dt class="col-sm-2">
+                    Sick Leave
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.Sick)
+                </dd>
+            </dl>
+    <!--Decision buttons-->
+            <div class="form-group">
+                <input type="submit" name="Decision" value="Approve" class="btn btn-primary dr-shadow2" /> |
+                <input type="submit" name="Decision" value="Reject" class="btn btn-danger dr-shadow2" />
+            </div>
+        </form>
+    </div>
+    <!--Navigation-->
+    <div class="card-footer rounded-bottom">
+        <a asp-controller="Staff" asp-action="GetStaff" asp-route-id="@staff.StaffId" class="btn btn-secondary dr-shadow2">Staff Details</a> |
+        <a asp-controller="LeaveAdmin" asp-action="Leaves" class="btn btn-secondary dr-shadow2">Leave Requests</a>
+    </div>
+</div>
+<!--Render whether Staff has any tasks assigned during requested leave-->
+<div class="card card-custom">
+    <div class="card-header bg-blue text-white rounded-top">
+        <h4>Staff Tasks</h4>
+    </div>
+    <div class="card-body">
+    @if (staff.Tasks.Count == 0)
+    {
+        <text>No tasks found.</text>
+    }
+    else
+    {
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>Project Name</th>
+                    <th>Project Deadline</th>
+                    <th>Task ID</th>
+                    <th>Description</th>
+                    <th>Hours</th>
+                    <th>Date</th>
+                    <th>Finished</th>
+                </tr>
+                </thead>
+                <tbody>
+                    @{
+                        var sortedTasks = staff.Tasks.OrderBy(t => t.Date);
+                    }
+                    @foreach (var task in sortedTasks)
+                    {
+                        Project project = projectService.GetProject(task);
+                        if (task.Date >= Model.StartDate && task.Date <= Model.EndDate)
+                        {
+                            <tr>
+                                <td>@project.ProjectName</td>
+                                <td>@project.Deadline</td>
+                                <td>@task.Id</td>
+                                <td>@task.Description</td>
+                                <td>@task.Hours</td>
+                                <td>@task.Date</td>
+                                <td>
+                                    @if (task.IsFinished)
+                                    {
+                                        <input type="checkbox" checked disabled />
+                                    }
+                                    else
+                                    {
+                                        <input type="checkbox" disabled />
+                                    }
+                                </td>
+                            </tr>
+                        
+                        }
+                    }
+                    @if (!sortedTasks.Any(task => task.Date >= Model.StartDate && task.Date <= Model.EndDate))
+                    {
+                        <tr>
+                            <td>No tasks assigned between @Model.StartDate and @Model.EndDate</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+    }
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

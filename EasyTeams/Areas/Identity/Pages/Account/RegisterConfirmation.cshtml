@@ -1,0 +1,29 @@
+﻿@page
+@model RegisterConfirmationModel
+@{
+    ViewData["Title"] = "Register confirmation";
+}
+
+<div class="card card-custom">
+    <div class="card-header bg-blue text-white rounded-top">
+        <h4>@ViewData["Title"]</h4>
+    </div>
+    <div class="card-body">
+        <hr />
+@{
+    if (@Model.DisplayConfirmAccountLink)
+    {
+<p>
+    <a id="confirm-link" href="@Model.EmailConfirmationUrl">Click here to confirm new 
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <text>Staff/Manager</text>
+                        }
+                        else{
+                            <text>Staff</text>}
+    account</a>
+</p>
+    }
+}
+</div>
+

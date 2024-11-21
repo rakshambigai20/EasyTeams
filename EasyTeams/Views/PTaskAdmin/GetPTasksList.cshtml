@@ -1,0 +1,154 @@
+﻿@model List<EasyTeams.Services.Models.PTaskProjectStaff>
+
+@{
+    ViewData["Title"] = "View Tasks List";
+}
+<!-- This view displays a list of tasks filtered by project. -->
+
+<div class="card card-custom" style="width: 90%;">
+    <div class="card-header bg-blue text-white rounded-top">
+        <h4>@ViewData["Title"]</h4>
+    </div>
+
+    <!-- Search and Filter Section: Allows users to filter tasks by description, date range, and staff. -->
+    <div class="card-body">
+        <div class="row mb-3">
+            <div class="col-md-4">
+                <label for="searchDescription">Search by Description</label>
+                <input type="text" id="searchDescription" class="form-control" placeholder="Enter Description" />
+            </div>
+
+            <div class="col-md-4">
+                <label for="startDate">Start Date</label>
+                <input type="date" id="startDate" class="form-control" />
+            </div>
+
+            <div class="col-md-4">
+                <label for="endDate">End Date</label>
+                <input type="date" id="endDate" class="form-control" />
+            </div>
+
+            <div class="col-md-4">
+                <label for="staffName">Filter by Staff</label>
+                <select id="staffName" class="form-control">
+                    <option value="">All Staff</option>
+                    @foreach (var staff in Model.Select(t => t.StaffName).Distinct())
+                    {
+                        <option value="@staff">@staff</option>
+                    }
+                </select>
+            </div>
+        </div>
+
+        <hr />
+        <!--Tasks List-->
+        <table class="table" id="tasksTable">
+            <thead>
+                <tr>
+                    <th>Task ID</th>
+                    <th>Staff Name</th>
+                    <th>Description</th>
+                    <th>Hours</th>
+                    <th>Date</th>
+                    <th>Report</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var task in Model)
+                {
+                    <tr class="task-row" data-description="@task.Description" data-date="@task.Date" data-staff="@task.StaffName">
+                        <td>@task.Id</td>
+                        <td>@task.StaffName</td>
+                        <td>@task.Description</td>
+                        <td>@task.Hours</td>
+                        <td>@task.Date</td>
+                        <td>
+                            <!-- Displays a button to view the report if it exists, otherwise no button is displayed -->
+                            @if (!string.IsNullOrEmpty(task.Report))
+                            {
+                                <a asp-controller="Staff" asp-action="ViewReport" asp-route-id="@task.Id" class="btn btn-inf3">View</a>
+                            }
+                        </td>
+                        <!--display actions based on task status-->
+                        <td>@(task.IsFinished ? "Completed" : "Pending")</td>
+                        <td>
+                            <!-- Allows marking a task as finished if it is not already marked -->
+                            @if (!task.IsFinished)
+                            {
+                                <form asp-controller="PTaskAdmin" asp-action="MarkFinished" asp-route-id="@task.Id" method="post" style="display: inline-block;">
+                                    <button class="btn btn-outline-success btn-sm dr-shadow2" type="submit">Mark As Finished</button>
+                                </form>
+                            }
+                        </td>
+                        <!--Button to get task details-->
+                        <td>
+                            <a asp-controller="PTaskAdmin" asp-action="GetPTask" asp-route-id="@task.Id" class="btn btn-inf2 btn-sm">Details</a>
+                        </td>
+                        <!--Button to delete a task-->
+                        <td>
+                            <a asp-controller="PTaskAdmin" asp-action="Delete" asp-route-id="@task.Id" class="btn btn-delete btn-sm">Delete</a>
+                        </td>
+                    </tr>
+                }
+                
+            </tbody>
+        </table>
+    </div>
+    <!-- Navigation button to return to the projects overview -->
+    <div class="card-footer rounded-bottom">
+        <a asp-action="GetProjects" asp-controller="ProjectAdmin" class="btn btn-secondary">Go to Projects</a>
+    </div>
+</div>
+
+
+<script>
+    <!--// Setup and fetch all input and select elements for task filtering-->
+    document.addEventListener('DOMContentLoaded', () => {
+        var searchInput = document.getElementById('searchDescription');
+        var startDateInput = document.getElementById('startDate');
+        var endDateInput = document.getElementById('endDate');
+        var staffNameSelect = document.getElementById('staffName');
+        var taskRows = document.querySelectorAll('.task-row');
+        <!--// Converts date strings from 'dd/mm/yyyy' format into Date objects to facilitate date comparisons-->
+        function parseDate(dateString) {
+            var parts = dateString.split('/');
+            return new Date(`${parts[2]}-${parts[1]}-${parts[0]}`);
+        }
+        <!--//Main function to filter tasks based on user input criteria-->
+        function filterTasks() {
+            var description = searchInput.value.toLowerCase();
+            var startDate = startDateInput.value ? new Date(startDateInput.value) : null;
+            var endDate = endDateInput.value ? new Date(endDateInput.value) : null;
+            var staffName = staffNameSelect.value;
+
+            taskRows.forEach(task => {
+                var taskDescription = task.getAttribute('data-description').toLowerCase();
+                var taskDateStr = task.getAttribute('data-date');
+                var taskDate = parseDate(taskDateStr);
+                var taskStaff = task.getAttribute('data-staff');
+
+                var matchesDescription = !description || taskDescription.includes(description);
+                var matchesStartDate = !startDate || taskDate >= startDate;
+                var matchesEndDate = !endDate || taskDate <= endDate;
+                var matchesStaff = !staffName || taskStaff === staffName;
+
+                if (matchesDescription && matchesStartDate && matchesEndDate && matchesStaff) {
+                    task.style.display = '';
+                } else {
+                    task.style.display = 'none';
+                }
+            });
+        }
+        [searchInput, startDateInput, endDateInput, staffNameSelect].forEach(element => {
+        <!--//Adds event listeners to filter input fields to activate task filtering when user interactions occur-->
+            element.addEventListener('change', filterTasks);
+            element.addEventListener('keyup', filterTasks);
+        });
+
+        filterTasks();
+    });
+</script>

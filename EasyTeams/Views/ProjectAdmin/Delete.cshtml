@@ -1,0 +1,45 @@
+﻿@model EasyTeams.Data.Models.Domain.Project
+
+@{
+    ViewData["Title"] = "Delete";
+}
+
+<div class="card card-custom">
+    <div class="card-header bg-blue text-white rounded-top">
+        <h4>@ViewData["Title"]</h4>
+    </div>
+    <div class="card-body">
+        <!--Confirmation message for deleting a project-->
+        <h5>Deleting this project will also remove all related tasks. Are you sure you want to proceed?</h5>
+        <hr />
+        <dl class="row">
+            <dt class="col-sm-4">
+                @Html.DisplayNameFor(model => model.ProjectName)
+            </dt>
+            <dd class="col-sm-8">
+                @Html.DisplayFor(model => model.ProjectName)
+            </dd>
+            <dt class="col-sm-4">
+                @Html.DisplayNameFor(model => model.Deadline)
+            </dt>
+            <dd class="col-sm-8">
+                @Html.DisplayFor(model => model.Deadline)
+            </dd>
+            <dt class="col-sm-4">
+                @Html.DisplayNameFor(model => model.Description)
+            </dt>
+            <dd class="col-sm-8">
+                @Html.DisplayFor(model => model.Description)
+            </dd>
+        </dl>
+        <form asp-action="Delete">
+            <!-- Hidden input to carry the project's ID to the backend for deletion -->
+            <input type="hidden" asp-for="Id" />
+            <div class="card-footer rounded-bottom">
+                <input type="submit" value="Delete" class="btn btn-danger dr-shadow2" /> 
+                <!--Button's redirection action-->
+                <a asp-controller="ProjectAdmin" asp-action="GetProjectsList" class="btn btn-secondary dr-shadow2">Back to Projects</a>
+            </div>
+        </form>
+    </div>
+</div>

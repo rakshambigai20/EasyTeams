@@ -1,0 +1,61 @@
+﻿@model EasyTeams.Data.Models.Domain.Staff
+
+@{
+    ViewData["Title"] = "Staff Details";
+}
+
+<div class="card card-custom">
+    <div class="card-header bg-blue text-white rounded-top">
+        <h4>@ViewData["Title"]</h4>
+    </div>
+    <!--Displays Staff details for the manager-->
+    <div class="card-body">
+        <hr />
+        <dl class="row">
+            <dt class="col-sm-4">
+                First Name
+            </dt>
+            <dd class="col-sm-8">
+                @Html.DisplayFor(model => model.FirstName)
+            </dd>
+            <dt class="col-sm-4">
+                Last Name
+            </dt>
+            <dd class="col-sm-8">
+                @Html.DisplayFor(model => model.LastName)
+            </dd>
+            <dt class="col-sm-4">
+                Work Email
+            </dt>
+            <dd class="col-sm-8">
+                @Html.DisplayFor(model => model.WorkEmail)
+            </dd>
+            <dt class="col-sm-4">
+                Phone Number
+            </dt>
+            <dd class="col-sm-8">
+                @Html.DisplayFor(model => model.PhoneNumber)
+            </dd>
+            <dt class="col-sm-4">
+                Address
+            </dt>
+            <dd class="col-sm-8">
+                @Html.DisplayFor(model => model.Address)
+            </dd>
+        </dl>
+    </div>
+    <div class="card-footer rounded-bottom">
+        <!--Options to edit Staff-->
+        @if (User.IsInRole("Manager") || User.IsInRole("Admin"))
+        {
+            <a asp-action="Edit" asp-route-id="@Model?.StaffId" class="btn btn-primary dr-shadow2">Edit</a>
+            <a asp-controller="Staff" asp-action="GetMyStaffs" class="btn btn-secondary dr-shadow2">Back to Staff List</a>
+        }
+        <!--Partially renders Staff's leaves-->
+        @if (Model.Leaves.Count != 0)
+        {
+            <a asp-controller="Staff" asp-action="LeaveStatistics" class="btn btn-secondary dr-shadow2">See Leaves Statistics</a>
+            @Html.Partial("~/Views/LeaveAdmin/LeavesList.cshtml", Model.Leaves)
+        }
+    </div>
+</div>

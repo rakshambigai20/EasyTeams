@@ -1,0 +1,102 @@
+﻿@{
+    var leaveDictionary = ViewBag.LeaveDictionary as Dictionary<DateTime, string>;
+    var upcomingProjects = ViewBag.UpcomingProjects as Dictionary<DateTime, string>;
+}
+
+<div id="calendar" style="overflow: hidden;"></div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.0/main.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.0/main.min.js"></script>
+<script src='https://cdn.jsdelivr.net/npm/fullcalendar/index.global.min.js'></script>
+<style>
+    /* Custom colors for FullCalendar buttons */
+    :root {
+        --fc-button-text-color: white; 
+        --fc-button-bg-color: #0A58CA;
+        --fc-button-border-color: #0A58CA;
+        --fc-button-hover-bg-color: #0953c3;
+        --fc-button-hover-border-color: #0953c3;
+        --fc-button-active-bg-color: #0953c3;
+        --fc-button-active-border-color: #0953c3;
+    }
+
+    .fc-prev-button,
+    .fc-next-button {
+        background-color: var(--fc-button-bg-color); 
+        color: var(--fc-button-text-color); 
+        border: 1px solid var(--fc-button-border-color); 
+    }
+
+        .fc-prev-button:hover,
+        .fc-next-button:hover {
+            background-color: var(--fc-button-hover-bg-color); 
+            border-color: var(--fc-button-hover-border-color); 
+        }
+</style>
+
+<div id="calendar" style=" overflow: hidden;"></div>
+
+<script>
+    $(document).ready(function () {
+        var calendarEvents = [];
+
+        // Add dictionary events to the calendar
+    @if (leaveDictionary != null)
+    {
+        foreach (var item in leaveDictionary.OrderBy(k => k.Key))
+        {
+            var date = item.Key.ToString("yyyy-MM-dd");
+            var title = item.Value;
+
+            <text>
+                    calendarEvents.push({
+                        title: "@title",
+                        start: "@date",
+                        allDay: true,
+                        color: "@(title == "Bank Holiday" ? "orange" : title.Contains(";") ? "#7E00B0" : title.Contains("Deadline") ? "#CB0055" : title.Contains("Sick") ? "red" : title.Contains("Annual") ? "green" : "blue")"
+                    });
+            </text> //Colours are based on events titles. Bank holidays are orange, deadlines are magenda, sick leaves are red, and annual leaves are green, concatenated events are purple, and any other events are blue
+        }
+    }
+
+            // Add project deadlines to the calendar
+    @if (upcomingProjects != null)
+    {
+        foreach (var project in upcomingProjects.OrderBy(k => k.Key))
+        {
+            var date = project.Key.ToString("yyyy-MM-dd");
+
+            foreach (var projectName in project.Value)
+            {
+                <text>
+                        calendarEvents.push({
+                            title: "@projectName",
+                            start: "@date",
+                            allDay: true,
+                            color: "blue", 
+                        });
+                </text>
+            }
+        }
+    }
+
+            var calendarEl = document.getElementById('calendar');
+
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'dayGridMonth',
+            events: calendarEvents, 
+            headerToolbar: {
+                left: 'prev,next',
+                center: 'title',
+                right: 'dayGridMonth,timeGridWeek,timeGridDay'
+            },
+            dateClick: function (info) {
+                alert('Date: ' + info.dateStr + ', Title: ' + info.event.title);
+            }
+        });
+
+        calendar.render(); // Render the calendar
+    });
+</script>
+

@@ -1,0 +1,45 @@
+﻿@model IEnumerable<EasyTeams.Data.Models.Domain.PTask>
+
+@{
+    ViewData["Title"] = "Pending Tasks";
+}
+<!--Used to display pending tasks in the staff's dashboard-->
+<div class="card card-custom">
+    <div class="card-header bg-blue text-white rounded-top">
+        <h4>@ViewData["Title"]</h4>
+    </div>
+    <div class="card-body">
+        <hr />
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>@Html.DisplayNameFor(model => model.Description)</th>
+                    <th>@Html.DisplayNameFor(model => model.Date)</th>
+                    <th>@Html.DisplayNameFor(model => model.Hours)</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@Html.DisplayFor(modelItem => item.Description)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Date)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Hours)</td>
+                        <td>
+
+                            <!-- Displays a button to view the report if the report has already been submitted -->
+                            @if (item.ReportSubmitted)
+                            {
+                                <a asp-controller="Staff" asp-action="ViewReport" asp-route-id="@item.Id" class="btn btn-outline-success dr-shadow2">View Report</a>
+                            }
+                            <!-- Displays a button to submit the report if it has not been submitted yet --> 
+                                <a asp-controller="Staff" asp-action="SubmitReport" asp-route-id="@item.Id" class="btn btn-primary dr-shadow2">Submit Report</a>
+                            
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

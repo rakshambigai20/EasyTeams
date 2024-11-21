@@ -1,0 +1,150 @@
+﻿@model IList<EasyTeams.Data.Models.Domain.Staff>
+
+@{
+    ViewData["Title"] = "Leaves";
+    DateOnly today = DateOnly.FromDateTime(DateTime.Today);
+@using EasyTeams.Data.Models.Domain;
+    var sortedStaff = Model.OrderBy(s => s.LastName);
+}
+@{
+    ViewData["Title"] = "Leaves List";
+}
+<!--List of leaves based on Manager's staff-->
+<!--Leaves sorted by: Awaiting Authorisation and Approved-->
+<!--Ordered by request date-->
+<!--No rejected leaves included-->
+<div class="card card-custom">
+    <div class="card-header bg-blue text-white rounded-top">
+        <h4>@ViewData["Title"]</h4>
+    </div>
+    <div class="card-body">
+        <hr />
+        <div id='leavesData'>
+            <h5>Awaiting Authorisation</h5>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>Request Date</th>
+                        <th>Start Date</th>
+                        <th>End Date</th>
+                        <th>Sick Leave</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
+                    var allLeaves = Model.SelectMany(s => s.Leaves)
+                                            .OrderByDescending(l => l.RequestDate)
+                                            .Where(l => l.StartDate.Year == today.Year && !l.Rejected && !l.Authorised);
+                    }
+                    @foreach (var leave in allLeaves)
+                    {
+                        var staff = Model.FirstOrDefault(s => s.Leaves.Contains(leave));
+                        <tr>
+                            <td>@staff.FirstName</td>
+                            <td>@staff.LastName</td>
+                            <td>@leave.RequestDate</td>
+                            <td>@leave.StartDate</td>
+                            <td>@leave.EndDate</td>
+                            <td>
+                                @if (leave.Sick)
+                                {
+                                    <input type="checkbox" checked disabled />
+                                }
+                                else
+                                {
+                                    <input type="checkbox" disabled />
+                                }
+                            </td>
+                            <td>
+                                <a asp-controller="LeaveAdmin" asp-action="LeaveDetails" asp-route-id="@leave.Id" class="btn btn-inf2">Details</a></td>
+                                <td>
+                                @{
+                                    //Only Admin and Manager can approve or reject leave if that leave has not been rejected in the past and the start date is in the future
+                                    if ((User.IsInRole("Manager") || User.IsInRole("Admin")) && !leave.Authorised && leave.StartDate > today && !leave.Rejected)
+                                    {
+                                        <a asp-controller="LeaveAdmin" asp-action="ApproveReject" asp-route-id="@leave.Id" class="btn btn-appr">Approve or Reject</a>
+                                    }
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+           <br />
+            <h5>Authorised</h5>
+            @foreach (var staff in sortedStaff)
+            {
+                if (staff.Leaves.Count != 0)
+                {
+                    <h6>@staff.LastName, @staff.FirstName</h6>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Request Date</th>
+                                <th>Start Date</th>
+                                <th>End Date</th>
+                                <th>Authorised</th>
+                                <th>Authorised Date</th>
+                                <th>Sick Leave</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{
+                                var sortedLeaves = staff.Leaves.OrderByDescending(l => l.StartDate);
+                            }
+                            @foreach (var leave in sortedLeaves)
+                            {
+                                if (leave.StartDate.Year == today.Year && leave.Authorised == true)
+                                {
+                                    <tr>
+                                        <td>@leave.RequestDate</td>
+                                        <td>@leave.StartDate</td>
+                                        <td>@leave.EndDate</td>
+                                        <td>
+                                            @if (leave.Authorised)
+                                            {
+                                                <input type="checkbox" checked disabled />
+                                            }
+                                            else
+                                            {
+                                                <input type="checkbox" disabled />
+                                            }
+                                        </td>
+                                        <td>
+                                            @if (leave.AuthorisedDate != DateTime.MinValue)
+                                            {
+                                                @leave.AuthorisedDate
+                                            }
+                                            else
+                                            {
+                                                <text>------</text>
+                                            }
+                                        </td>
+                                        <td>
+                                            @if (leave.Sick)
+                                            {
+                                                <input type="checkbox" checked disabled />
+                                            }
+                                            else
+                                            {
+                                                <input type="checkbox" disabled />
+                                            }
+                                        </td>
+                                        <td>
+                                            <!--Approved can be only viewed-->
+                                            <a asp-controller="LeaveAdmin" asp-action="LeaveDetails" asp-route-id="@leave.Id" class="btn btn-inf2">Details</a>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                }
+            }
+        </div>
+    </div>
+</div>

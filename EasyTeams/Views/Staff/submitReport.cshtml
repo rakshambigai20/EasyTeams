@@ -1,0 +1,43 @@
+﻿@model EasyTeams.Data.Models.Domain.PTask
+
+@{
+    ViewData["Title"] = "Submit Report";
+}
+<!-- View for submitting report by staff-->
+<div class="card card-custom">
+    <div class="card-header bg-blue text-white rounded-top">
+        <h4>@ViewData["Title"]</h4>
+    </div>
+    <div class="card-body">
+        <hr />
+        <div class="row">
+            <div class="col-md-4">
+                <form asp-action="SubmitReport" method="post">
+                    <input type="hidden" asp-for="Id" />
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div class="form-group">
+                        <label>Task Description</label>
+                        <input type="text" class="form-control" value="@Model.Description" readonly style="background-color: white;" />
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Report" class="control-label"></label>
+                        <textarea asp-for="Report" class="form-control" style="background-color: white;"></textarea>
+                        <span asp-validation-for="Report" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <input type="submit" value="Submit" class="btn btn-primary dr-shadow2" />
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="card-footer rounded-bottom">
+        <a asp-controller="Staff" asp-action="GetTasks" class="btn btn-secondary dr-shadow2">Back to Tasks</a>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

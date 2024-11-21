@@ -1,0 +1,56 @@
+﻿@model EasyTeams.Data.Models.Domain.Staff
+
+@{
+    ViewData["Title"] = "Your Profile";
+}
+<!--General user profile view, no extra options-->
+<div class="card card-custom">
+    <div class="card-header bg-blue text-white rounded-top">
+        <h4>@ViewData["Title"]</h4>
+    </div>
+    <div class="card-body">
+        <hr />
+        <dl class="row">
+            <dt class="col-sm-4">
+                First Name
+            </dt>
+            <dd class="col-sm-8">
+                @Html.DisplayFor(model => model.FirstName)
+            </dd>
+            <dt class="col-sm-4">
+                Last Name
+            </dt>
+            <dd class="col-sm-8">
+                @Html.DisplayFor(model => model.LastName)
+            </dd>
+            <dt class="col-sm-4">
+                Work Email
+            </dt>
+            <dd class="col-sm-8">
+                @Html.DisplayFor(model => model.WorkEmail)
+            </dd>
+            <dt class="col-sm-4">
+                Phone Number
+            </dt>
+            <dd class="col-sm-8">
+                @Html.DisplayFor(model => model.PhoneNumber)
+            </dd>
+            <dt class="col-sm-4">
+                Address
+            </dt>
+            <dd class="col-sm-8">
+                @Html.DisplayFor(model => model.Address)
+            </dd>
+        </dl>
+    </div>
+
+    @{
+        var changePassword = Url.Page(
+                   "/Account/Manage/ChangePassword",
+                   pageHandler: null,
+                   values: new { area = "Identity" });
+    }
+    <div class="card-footer rounded-bottom">
+        <a href="@changePassword" class="btn btn-primary dr-shadow2">Change Password</a>
+    </div>
+</div>

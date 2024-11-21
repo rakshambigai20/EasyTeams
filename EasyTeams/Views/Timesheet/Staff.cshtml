@@ -1,0 +1,18 @@
+﻿@model EasyTeams.Data.Models.Domain.Staff
+
+@{
+    ViewData["Title"] = "Staff";
+}
+<!--Used as a partial view for timesheet to display staff details-->
+<div class="card-body">
+    <dl class="row">
+        <!--Staff email-->
+        <dt class="col-sm-4">Staff Id : </dt>
+        <dd class="col-sm-8">@Model.WorkEmail </dd>
+        <!-- Staff Full Name -->
+        <dt class="col-sm-4">Staff Name : </dt>
+        <dd class="col-sm-8">@Model.FirstName @Model.LastName</dd>
+
+  
+    </dl>
+</div>

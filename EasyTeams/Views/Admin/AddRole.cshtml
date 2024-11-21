@@ -1,0 +1,29 @@
+﻿@{
+    ViewData["Title"] = "Add Role";
+}
+
+<div class="card card-custom">
+    <div class="card-header bg-blue text-white rounded-top">
+        <h4>@ViewData["Title"]</h4>
+    </div>
+    <div class="card-body">
+        <hr />
+        <!--Form for adding a role-->
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+            @Html.ValidationSummary(true)
+            <div class="form-group">
+                <label for="RoleName">Role Name:</label>
+                @Html.TextBox("RoleName", null, new { @class = "form-control" })
+            </div>
+            <hr />
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary dr-shadow2" />
+            </div>
+        }
+    </div>
+    <div class="card-footer rounded-bottom">
+        @Html.ActionLink("Manage User Roles", "GetUsers", null, new { @class = "btn btn-secondary" })
+    </div>
+</div>

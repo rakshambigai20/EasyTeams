@@ -1,0 +1,22 @@
+﻿.card-custom {
+    width: 75%;
+    margin: 20px auto;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+}
+
+    .card-custom .card-header {
+        border-radius: 10px 10px 0 0;
+    }
+
+/* Vertical menu card */
+.menu-card {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100px;
+    background-color: #0A58CA;
+    border-radius: 0;
+    z-index: 1000;
+}

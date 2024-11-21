@@ -1,0 +1,38 @@
+﻿@{
+    ViewData["Title"] = "Remove User FromRole";
+}
+
+<div class="card card-custom">
+    <div class="card-header bg-blue text-white rounded-top">
+        <h4>@ViewData["Title"]</h4>
+    </div>
+    <div class="card-body">
+        <hr />
+        @using (Html.BeginForm())
+        {
+            <!--Form to remove user from role-->
+            @Html.AntiForgeryToken()
+            @Html.ValidationSummary(true)
+            <dl class="row">
+                <dt class="col-sm-4">
+                    User
+                </dt>
+                <dd class="col-sm-8">
+                    @Html.DropDownList("UserName", (IEnumerable<SelectListItem>)ViewData["Users"], new { @class = "form-control" })
+                </dd>
+                <dt class="col-sm-4">
+                    Role
+                </dt>
+                <dd class="col-sm-8">
+                    @Html.DropDownList("RoleName", (IEnumerable<SelectListItem>)ViewData["Roles"], new { @class = "form-control" })
+                </dd>
+            </dl>
+            <hr />
+            <div class="row">
+                <div class="col-sm-12">
+                    <input type="submit" value="Remove" class="btn btn-danger dr-shadow2" />
+                </div>
+            </div>
+        }
+    </div>
+</div>

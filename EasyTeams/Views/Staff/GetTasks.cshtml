@@ -1,0 +1,45 @@
+﻿@model IEnumerable<EasyTeams.Data.Models.Domain.PTask>
+
+@{
+    ViewData["Title"] = "Staff Tasks";
+}
+<!--Staff views of Tasks where they can submit or view report-->
+<div class="card card-custom">
+    <div class="card-header bg-blue text-white rounded-top">
+        <h4>@ViewData["Title"]</h4>
+    </div>
+    <div class="card-body">
+        <hr />
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>@Html.DisplayNameFor(model => model.Description)</th>
+                    <th>@Html.DisplayNameFor(model => model.Date)</th>
+                    <th>@Html.DisplayNameFor(model => model.Hours)</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@Html.DisplayFor(modelItem => item.Description)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Date)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Hours)</td>
+                        <td class="d-flex justify-content-between">
+                            @if (item.ReportSubmitted && item.Report != null)
+                            {
+                                <a asp-action="ViewReport" asp-route-id="@item.Id" style="width:130px;" class="btn btn-success dr-shadow2 mr-3">View Report</a>
+                            }
+                            else
+                            {
+                                <a asp-action="SubmitReport" asp-route-id="@item.Id" style="width:130px;" class="btn btn-primary dr-shadow2 mr-5">Submit Report</a>
+                            }
+                        </td>
+
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

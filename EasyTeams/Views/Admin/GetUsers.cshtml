@@ -1,0 +1,47 @@
+﻿@{
+    ViewData["Title"] = "Users";
+}
+
+<div class="card card-custom">
+    <div class="card-header bg-blue text-white rounded-top">
+        <h4>@ViewData["Title"]</h4>
+    </div>
+    <div class="card-body">
+        <hr />
+        <div class="row">
+            <!--Links to other actions-->
+            <div class="col-sm-12">
+                <a asp-action="AddUserToRole" class="btn btn-primary dr-shadow2">Give User New Role</a>
+                <a asp-action="RemoveUserFromRole" class="btn btn-danger dr-shadow2">Remove User From Role</a>
+                <a asp-action="AddRole" class="btn btn-secondary dr-shadow2">Add New Role</a>
+            </div>
+        </div>
+        <br />
+        <!--Table to display usersnames and user roles-->
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        Name
+                    </th>
+                    <th>
+                        Role
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var user in Model)
+                {
+                    <tr>
+                        <td>
+                            @user.UserName
+                        </td>
+                        <td>
+                            @user.RoleName
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

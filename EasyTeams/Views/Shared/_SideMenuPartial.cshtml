@@ -1,0 +1,154 @@
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
+@using EasyTeams.Data.Models.Domain;
+@using EasyTeams.Services.IService;
+@using EasyTeams.Services.Service;
+<div>
+    <!--Easy Teams logo displayed on top-->
+<div class="logo">
+    <img src="~/images/LogoInitial.png" alt="Easy Teams logo" style="width: 55px; height: auto;">
+</div>
+</div>
+<br />
+<!--View for side menu bar-->
+@if (SignInManager.IsSignedIn(User))
+{
+    //variables for tracking user location
+    var currentController = ViewContext.RouteData.Values["Controller"]?.ToString();
+    var currentAction = ViewContext.RouteData.Values["Action"]?.ToString();
+    var currentArea = ViewContext.RouteData.Values["Area"]?.ToString();
+    string userId = Context.Session.GetString("currentUserId");
+
+    //displayed icons based on role
+    //Manager and Manager+Admin
+    if (User.IsInRole("Manager") || (User.IsInRole("Manager") && User.IsInRole("Admin")))
+    {
+        IManagerService managerService = new ManagerService();
+        Manager manager = managerService.GetManager(userId);
+        var staffId = manager.StaffId;
+        <div>
+            <!--Icons if user is either only Manager or Manager and Admin-->
+            <div class="sidebar @(currentAction == "Dashboard" ? "active":"")"> <!--set's current action as active-->
+                <a asp-area="" asp-controller="Staff" asp-action="Dashboard">
+                    <img class="sidebar-icons" src="~/images/Dashboard.png" alt="Dashboard">
+                </a>
+                <div class="sidebar-text">Dashboard</div>
+            </div>
+            <!--sets current controller and actions not being Dashboard or LeaveStatistics as active-->
+            <div class="sidebar @(currentController == "Staff" && (currentAction != "Dashboard" && currentAction != "LeaveStatistics" && currentAction != "Profile") ? "active":"")">
+                <a asp-area="" asp-controller="Staff" asp-action="GetMyStaffs">
+                    <img class="sidebar-icons" src="~/images/Staff.png" alt="Staff">
+                </a>
+                <div class="sidebar-text">Staff</div>
+            </div>
+            <!--etc-->
+            <div class="sidebar @(currentController == "ProjectAdmin" && currentAction != "GetProjects" ? "active":"")">
+                <a asp-area="" asp-controller="ProjectAdmin" asp-action="GetProjectsList">
+                    <img class="sidebar-icons" src="~/images/Projects.png" alt="Projects">
+                </a>
+                <div class="sidebar-text">Projects</div>
+            </div>
+            <div class="sidebar @((currentController == "ProjectAdmin" && currentAction == "GetProjects") || currentController == "PTaskAdmin" ? "active":"")">
+                <a asp-area="" asp-controller="ProjectAdmin" asp-action="GetProjects">
+                    <img class="sidebar-icons" src="~/images/Tasks.png" alt="Tasks">
+                </a>
+                <div class="sidebar-text">Tasks</div>
+            </div>
+            <div class="sidebar @(currentController == "LeaveAdmin" || currentAction == "LeaveStatistics" ? "active":"")">
+                <a asp-area="" asp-controller="LeaveAdmin" asp-action="Leaves">
+                    <img class="sidebar-icons" src="~/images/Leaves.png" alt="Staff Leaves">
+                </a>
+                <div class="sidebar-text">Leaves</div>
+            </div>
+            <!--Section if user is bot Manager and Admin - additional icons-->
+            @if (User.IsInRole("Manager") && User.IsInRole("Admin"))
+            {
+                <div>
+                    <div class="sidebar @(currentController == "Admin" && currentAction == "GetUsers" ? "active" : "")">
+                        <a asp-area="" asp-controller="Admin" asp-action="GetUsers">
+                            <img class="sidebar-icons" src="~/images/Staff.png" alt="Users">
+                        </a>
+                        <div class="sidebar-text">Users</div>
+                    </div>
+                    <div class="sidebar @(currentController == "Admin" && currentAction == "AddRole" ? "active":"")">
+                        <a asp-area="" asp-controller="Admin" asp-action="AddRole">
+                            <img class="sidebar-icons" src="~/images/Roles.png" alt="Add Roles">
+                        </a>
+                        <div class="sidebar-text">Add Roles</div>
+                    </div>
+                </div>
+            }
+        </div>
+    }<!--Staff sidebar-->
+    if (User.IsInRole("Staff"))
+    {
+        IStaffService staffService = new StaffService();
+        Staff staff = staffService.GetStaff(userId);
+        var staffId = staff.StaffId;
+        <div>
+            <div class="sidebar @(currentController == "Staff" && currentAction == "Dashboard" ? "active":"")">
+                <a asp-area="" asp-controller="Staff" asp-action="Dashboard">
+                    <img class="sidebar-icons" src="~/images/Dashboard.png" alt="Dashboard">
+                </a>
+                <div class="sidebar-text">Dashboard</div>
+            </div>
+            <div class="sidebar @((currentController == "Staff" && currentAction != "Dashboard"  && currentAction != "Profile") || currentController == "PTaskAdmin" ? "active":"")">
+                <a asp-area="" asp-controller="Staff" asp-action="ViewTimesheet" asp-route-id="@staffId">
+                    <img class="sidebar-icons" src="~/images/Timesheet.png" alt="Timesheet">
+                </a>
+                <div class="sidebar-text">Timesheet</div>
+            </div>
+            <div class="sidebar @(currentController == "LeaveAdmin" ? "active":"")">
+                <a asp-controller="LeaveAdmin" asp-action="GetYourLeave">
+                    <img class="sidebar-icons" src="~/images/Leaves.png" alt="My Leaves">
+                </a>
+                <div class="sidebar-text">Leaves</div>
+            </div>
+        </div>
+    }
+    <!--Only Admin sidebar-->
+    if (User.IsInRole("Admin") && !User.IsInRole("Manager"))
+    {
+        IManagerService managerService = new ManagerService();
+        Manager admin = managerService.GetManager(userId);
+        var adminId = admin.StaffId;
+        <div>
+            <div class="sidebar @(currentController == "Staff" && currentAction == "Dashboard" ? "active":"")">
+                <a asp-area="" asp-controller="Staff" asp-action="Dashboard">
+                    <img class="sidebar-icons" src="~/images/Dashboard.png" alt="Dashboard">
+                </a>
+                <div class="sidebar-text">Dashboard</div>
+            </div>
+            <div class="sidebar @(currentController == "Admin" && currentAction == "GetUsers" ? "active":"")">
+                <a asp-area="" asp-controller="Admin" asp-action="GetUsers">
+                    <img class="sidebar-icons" src="~/images/Staff.png" alt="Users">
+                </a>
+                <div class="sidebar-text">Users</div>
+            </div>
+            <div class="sidebar @(currentController == "Admin" && currentAction == "AddRole" ? "active":"")">
+                <a asp-area="" asp-controller="Admin" asp-action="AddRole">
+                    <img class="sidebar-icons" src="~/images/Roles.png" alt="Add Roles">
+                </a>
+                <div class="sidebar-text">Add Roles</div>
+            </div>
+            <div class="sidebar @(currentController == "LeaveAdmin" && currentAction == "Leaves" ? "active":"")">
+                <a asp-area="" asp-controller="LeaveAdmin" asp-action="Leaves">
+                    <img class="sidebar-icons" src="~/images/Leaves.png" alt="Managers Leaves">
+                </a>
+                <div class="sidebar-text">Managers Leaves</div>
+            </div>
+        </div>
+
+    }
+    <!--Profile icon displayed no matter who is logged in-->
+    <div>
+        <div class="sidebar @(currentAction == "Profile" || currentArea == "Identity" ? "active":"")">
+            <a asp-area="" asp-controller="Staff" asp-action="Profile">
+                <img class="sidebar-icons" src="~/images/Profile.png" alt="Profile">
+            </a>
+            <div class="sidebar-text">Profile</div>
+        </div>
+    </div>
+}
+

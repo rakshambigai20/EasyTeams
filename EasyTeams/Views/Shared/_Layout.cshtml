@@ -1,0 +1,252 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - EasyTeams</title>
+@*     <link rel="stylesheet" href="~/css/customstyles.css" asp-append-version="true" /> *@
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/custom.css" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <style>
+        .div-wrap {
+            display: block;
+            position: relative;
+            margin-bottom: 20px;
+        }
+        .dr-shadow{
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .dr-shadow2{
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        .cont{
+            flex: 1 0 300px;
+            margin: 10px;
+        }
+        .container-custom{
+            align-content: center;
+            display: flex;
+            flex-wrap: wrap;
+        }
+        .bg-blue {
+            background-color: #0A58CA;
+        }
+
+        .btn-inf {
+            color: #000;
+            background-color: #E8E8E8;
+            border-color: #0A58CA;
+            box-shadow: 0.5px 2px 4px 2px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-inf:hover {
+            color: #000;
+            background-color: #0A58CA;
+            border-color: #0A58CA;
+            box-shadow: 0.5px 3px 4px 2px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn-inf2 {
+            color: #000;
+            background-color: #fff;
+            border-color: #0A58CA;
+            box-shadow: 0.5px 2px 4px 2px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-inf2:hover {
+            color: #fff;
+            background-color: #0A58CA;
+            border-color: #0A58CA;
+            box-shadow: 0.5px 3px 4px 2px rgba(0, 0, 0, 0.3);
+        }
+        .btn-inf3{
+            color: #000;
+            background-color:#fff; 
+            border-color: #0DCAF0;
+            box-shadow: 0.5px 2px 4px 2px rgba(0, 0, 0, 0.2);
+        }
+        .btn-inf3:hover{
+            color: #fff;
+            background-color: #0DCAF0;
+            border-color: #0DACF0;
+            box-shadow: 0.5px 3px 4px 2px rgba(0, 0, 0, 0.3);
+        }
+        .btn-appr {
+            color: #000;
+            background-color: #fff;
+            border-color: #FFC40F;
+            box-shadow: 0.5px 2px 4px 2px rgba(0, 0, 0, 0.2);
+        }
+        .btn-appr:hover {
+            color: #000;
+            background-color: #FFC40F;
+            border-color: #FF770F;
+            box-shadow: 0.5px 3px 4px 2px rgba(0, 0, 0, 0.3);
+        }
+        .btn-delete {
+            color: #000;
+            background-color: #fff;
+            border-color: #A52834;
+            box-shadow: 0.5px 2px 4px 2px rgba(0, 0, 0, 0.2);
+        }
+        .btn-delete:hover {
+            color: #fff;
+            background-color: #A52834;
+            border-color: #901D28;
+            box-shadow: 0.5px 3px 4px 2px rgba(0, 0, 0, 0.3);
+        }
+        .logo {
+            display: flex;
+            justify-content: center;
+            user-select: none;
+        }
+
+        .sidebar-icons {
+            display: flex;
+            width: auto;
+            height: 35px;
+        }
+
+        .sidebar-text {
+            overflow-wrap: break-word;
+            font-family: 'Open Sans', sans-serif;
+            font-size: 15px;
+            color: #fff;
+        }
+
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            margin-bottom: 2px;
+        }
+
+            .sidebar:hover {
+                background-color: #6C757D;
+                font-weight: 700;
+                box-shadow: -2px -2px 0px 0px #6C757D;
+            }
+
+            .sidebar.active {
+                background-color: #565E64;
+                font-weight: 700;
+                box-shadow: -2px -2px 0px 0px #565E64;
+            }
+
+        .menu-card {
+            width: 100px;
+            height: 100%;
+            position: fixed;
+            left: 0;
+            top: 0;
+            overflow-y: auto;
+            z-index: 1000; /* Ensure the menu is on top of other content */
+        }
+
+        .flex-container {
+            margin-left: 100px;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            overflow-y: auto;
+        }
+
+        .flex-item {
+            flex-grow: 1;
+            overflow-y: auto;
+        }
+
+        main {
+            flex-grow: 1;
+        }
+
+        header {
+            margin-left: 100px;
+            position: fixed;
+            top: 0;
+            width: calc(100% - 100px);
+            z-index: 999; /* Below the menu but above the main content */
+        }
+
+        footer {
+            margin-top: auto;
+            position: fixed;
+            bottom: 0;
+            width: calc(100% - 100px);
+            z-index: 999; /* Below the menu but above the main content */
+        }
+
+        body {
+            padding-top: 60px; /* Adjust based on header height */
+            padding-bottom: 40px; /* Adjust based on footer height */
+            background-color: #e8e8e8;
+            /*background-image: linear-gradient(180deg, #ffffff 2px, #e8e8e8); */
+        }
+
+    </style>
+</head>
+@{
+    DateOnly today = DateOnly.FromDateTime(DateTime.Now);
+    string dayOfWeek = today.DayOfWeek.ToString();
+}
+<body>
+        @if (User.Identity.IsAuthenticated)
+{
+    <header style="padding-left: 0; padding-right: 0; width: @(User.Identity.IsAuthenticated ? "calc(100% - 100px)" : "100%"); margin-left: @(User.Identity.IsAuthenticated ? "100px" : "0");">
+        <nav style="width:100%;" class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow dr-shadow mb-3">
+            <div class="container-fluid" style="padding-left: 20px; padding-right: 20px;">
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                    <ul class="navbar-nav flex-grow-1">
+                        <li class="nav-item">
+                            <span class="nav-link text-dark">@today (@dayOfWeek)</span>
+                        </li>
+                    </ul>
+                    <partial name="_LoginPartial" style="margin-right: 10px"/>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+        <div class="menu-card">
+            <!-- Place your menu buttons here -->
+        <partial name ="_SideMenuPartial"/>
+    </div>
+    }
+    <div class="flex-container">
+        <main role="main" class="pb-3">
+            <div class="flex-item">
+                @RenderBody()
+            </div>
+        </main>
+        <footer style="position: fixed; bottom: 0; width: @(User.Identity.IsAuthenticated ? "calc(100% - 100px)" : "100%"); margin-left: @(User.Identity.IsAuthenticated ? "100px" : "0"); z-index: 999;">
+            <div class="container">
+                &copy; 2024 - EasyTeams - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            </div>
+        </footer>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var sidebarExists = !!document.querySelector('.menu-card');
+            var header = document.querySelector('header');
+            if (sidebarExists) {
+                header.style.width = 'calc(100% - 100px)';
+                header.style.marginLeft = '100px';
+            } else {
+                header.style.width = '100%';
+                header.style.marginLeft = '0';
+            }
+        });
+    </script>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

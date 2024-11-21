@@ -1,0 +1,22 @@
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
+@using EasyTeams.Data.Models.Domain;
+@using EasyTeams.Services.IService;
+@using EasyTeams.Services.Service;
+
+<ul class="navbar-nav">
+@if (SignInManager.IsSignedIn(User))
+{
+    IStaffService staffService = new StaffService();
+    Staff staff = staffService.GetStaff(Context.Session.GetString("currentUserId"));
+        <li class="nav-item">
+            <text class="nav-link text-dark" style=>Hello @staff.FirstName @staff.LastName!</text>
+        </li>
+    <li class="nav-item">
+        <form  class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Dashboard", "Staff")">
+            <button  type="submit" class="nav-link btn btn-link text-dark">Logout</button>
+        </form>
+    </li>
+}
+</ul>

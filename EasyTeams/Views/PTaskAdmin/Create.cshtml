@@ -1,0 +1,74 @@
+﻿@model EasyTeams.Services.Models.PTaskProjectStaff
+
+@{
+    ViewData["Title"] = "Add New Task";
+}
+
+<!--View to create task for a project  -->
+<h4>Add New Task</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        
+<div class="card card-custom">
+    <div class="card-header bg-blue text-white rounded-top">
+        <h4>@ViewData["Title"]</h4>
+    </div>
+    <div class="card-body">
+        <hr />
+        @Html.ValidationSummary(true)
+        <!--Display any error messages here-->
+        @if (!string.IsNullOrEmpty(ViewBag.Message))
+        {
+            <div style="color: red;">@ViewBag.Message</div>
+        }
+        <!--Fields to create a new task-->
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Date" class="control-label">Task Date</label>
+                <input asp-for="Date" type="date" class="form-control" />
+                <span asp-validation-for="Date" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Description" class="control-label"></label>
+                <input asp-for="Description" class="form-control" />
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Hours" class="control-label"></label>
+                <input asp-for="Hours" class="form-control" />
+                <span asp-validation-for="Hours" class="text-danger"></span>
+            </div>
+            <!--Dropdown for projects-->
+            <div class="form-group">
+                <label>Project</label>
+                @Html.DropDownListFor(model => model.ProjectId,
+                         (IEnumerable<SelectListItem>)ViewBag.projectList)
+                <span asp-validation-formaction="ProjectId" class="text-danger"></span>
+            </div>
+            <!--Dropdown for staff-->
+            <div class="form-group">
+                <div>
+                    <label>Staff</label>
+                    @Html.DropDownListFor(model => model.StaffId,
+                             (IEnumerable<SelectListItem>)ViewBag.staffList)
+                    <span asp-validation-formaction="StaffId" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary dr-shadow2" />
+            </div>
+        </form>
+    </div>
+    <!--Button to Go back to projects-->
+    <div class="card-footer rounded-bottom">
+        <a asp-controller="ProjectAdmin" asp-action="GetProjects" class="btn btn-secondary dr-shadow2">Go to Projects</a>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

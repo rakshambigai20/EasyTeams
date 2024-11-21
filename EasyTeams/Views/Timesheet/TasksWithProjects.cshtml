@@ -1,0 +1,121 @@
+﻿@model IEnumerable<EasyTeams.Services.Models.PTaskProjectStaff>
+@using System.Linq;
+<!--Used as a partial view to display task details-->
+@{
+    ViewData["Title"] = "Tasks";
+
+//Calculate the current week to display tasks for the current week
+    var today = DateOnly.FromDateTime(DateTime.Today);
+    var currentDayOfWeek = (int)DateTime.Today.DayOfWeek;
+    var daysUntilStartOfWeek = currentDayOfWeek == 0 ? 6 : currentDayOfWeek - 1;
+    var startOfWeek = today.AddDays(-daysUntilStartOfWeek);
+    var endOfWeek = startOfWeek.AddDays(6);
+
+    // Get distinct projects for filtering
+    var projectList = Model.Select(t => t.ProjectName).Distinct().ToList();
+
+    // Get distinct days of the week for filtering
+    var dayOfWeekList = Enum.GetNames(typeof(DayOfWeek));
+}
+
+<div class="card">
+    <div class="card-header bg-blue text-white rounded-top">
+        <h4>@ViewData["Title"]</h4>
+    </div>
+
+    <!-- Search and Filters -->
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-4">
+                <input type="text" class="form-control" id="searchDescription" placeholder="Search Description" onkeyup="filterTasks()">
+            </div>
+
+            <div class="col-md-4">
+                <select class="form-control" id="projectFilter" onchange="filterTasks()">
+                    <option value="">All Projects</option>
+                    @foreach (var project in projectList)
+                    {
+                        <option value="@project">@project</option>
+                    }
+                </select>
+            </div>
+
+            <div class="col-md-4">
+                <select class="form-control" id="dayFilter" onchange="filterTasks()">
+                    <option value="">All Days</option>
+                    @foreach (var day in dayOfWeekList)
+                    {
+                        <option value="@day">@day</option>
+                    }
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <div class="card mb-3">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-1"><b>ID</b></div>
+                <div class="col-md-3"><b>Description</b></div>
+                <div class="col-md-2"><b>Date</b></div>
+                <div class="col-md-1"><b>Hours</b></div>
+                <div class="col-md-3"><b>Project</b></div>
+            </div>
+        </div>
+    </div>
+    <!--Tasks list ordered by date-->
+    <div class="card-body" id="taskList">
+        @{
+            var sortedTasks = Model.OrderBy(t => t.Date);
+        }
+
+        @foreach (var item in sortedTasks)
+        {
+            if (item.Date >= startOfWeek && item.Date <= endOfWeek)
+            {
+                <div class="card mb-3 task-card" data-description="@item.Description" data-project="@item.ProjectName" data-day="@item.Date.DayOfWeek">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-1">@Html.DisplayFor(modelItem => item.Id)</div>
+                            <div class="col-md-3">@Html.DisplayFor(modelItem => item.Description)</div>
+                            <div class="col-md-2">@Html.DisplayFor(modelItem => item.Date)</div>
+                            <div class="col-md-1">@Html.DisplayFor(modelItem => item.Hours)</div>
+                            <div class="col-md-3">@Html.DisplayFor(modelItem => item.ProjectName)</div>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+</div>
+<!--search and filter-->
+<script>
+    function filterTasks() {
+        
+        // Get search input for description, project filter, and day filter values 
+        var description = document.getElementById("searchDescription").value.toLowerCase();
+        var project = document.getElementById("projectFilter").value;
+        var day = document.getElementById("dayFilter").value;
+       
+        // Get all tasks and loop through each task to check if task matches search description, project, and day filters
+        var tasks = document.getElementsByClassName("task-card");
+
+        for (var i = 0; i < tasks.length; i++) {
+            var task = tasks[i];
+            var taskDescription = task.getAttribute("data-description").toLowerCase();
+            var taskProject = task.getAttribute("data-project");
+            var taskDay = task.getAttribute("data-day");
+
+            var matchesDescription = taskDescription.includes(description);
+            var matchesProject = project === "" || taskProject === project;
+            var matchesDay = day === "" || taskDay === day;
+
+            // Show or hide task based on filter matches
+            if (matchesDescription && matchesProject && matchesDay) {
+                task.style.display = "block"; 
+            } else {
+                task.style.display = "none"; 
+            }
+        }
+    }
+</script>

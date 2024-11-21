@@ -1,0 +1,39 @@
+﻿@model EasyTeams.Services.Models.Timesheet
+
+@{
+    ViewData["Title"] = "Timesheet";
+    @using EasyTeams.Data.Models.Domain;
+    Staff staff = Model.staff;
+}
+<!--View of a timesheet. Timesheet is rendered based on tasks assigned for current week-->
+<div class="card card-custom">
+    <div class="card-header bg-blue text-white rounded-top">
+        <h4>@ViewData["Title"]</h4>
+    </div>
+    <div class="card-body">
+        <hr />
+        <div class="row">
+            
+                @*########### Display Staff Details ############*@
+                @if (Model.staff != null)
+                {
+                <div class="col-md-4">
+                    @Html.Partial("~/Views/Timesheet/Staff.cshtml", Model.staff)
+                </div>
+                }
+                @*########### Display task Details ############*@       
+                @if (Model.PTaskProject != null)
+                {
+                    @Html.Partial("~/Views/Timesheet/TasksWithProjects.cshtml", Model.PTaskProject)
+                }
+            </div>
+        </div>
+    </div>
+    <div class="card-footer rounded-bottom">
+        @if (User.IsInRole("Manager") || User.IsInRole("Admin"))
+        {
+            //<a asp-controller="Staff" asp-action="GetStaff" asp-route-id="@staff.StaffId" class="btn btn-secondary">Back to Staff</a>
+            <a asp-controller="Staff" asp-action="GetMyStaffs" class="btn btn-secondary dr-shadow2">Back to Staff List</a>
+        }
+    </div>
+</div>

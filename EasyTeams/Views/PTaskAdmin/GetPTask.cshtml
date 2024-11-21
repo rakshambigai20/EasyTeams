@@ -1,0 +1,55 @@
+﻿@model EasyTeams.Data.Models.Domain.PTask
+
+@{
+    ViewData["Title"] = "Task Details";
+}
+<!--Task details rendered based on task id-->
+<div class="card card-custom">
+    <div class="card-header bg-blue text-white rounded-top">
+        <h4>@ViewData["Title"]</h4>
+    </div>
+    <div class="card-body">
+        <hr />
+        <dl class="row">
+            <dt class="col-sm-4">
+                @Html.DisplayNameFor(model => model.Description)
+            </dt>
+            <dd class="col-sm-8">
+                @Html.DisplayFor(model => model.Description)
+            </dd>
+            <dt class="col-sm-4">
+                Deadline
+            </dt>
+            <dd class="col-sm-8">
+                @Html.DisplayFor(model => model.Date)
+            </dd>
+            <dt class="col-sm-4">
+                @Html.DisplayNameFor(model => model.Hours)
+            </dt>
+            <dd class="col-sm-8">
+                @Html.DisplayFor(model => model.Hours)
+            </dd>
+            <dt class="col-sm-4">
+                Report Submitted
+            </dt>
+            <dd class="col-sm-8">
+                @Html.DisplayFor(model => model.ReportSubmitted)
+            </dd>
+            <dt class="col-sm-4">
+                Finished
+            </dt>
+            <dd class="col-sm-8">
+                @Html.DisplayFor(model => model.IsFinished)
+            </dd>
+        </dl>
+    </div>
+    <!--Button to edit task-->
+    <div class="card-footer rounded-bottom">
+        @if (!Model.IsFinished)
+        {
+            <a asp-controller="PTaskAdmin" asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary dr-shadow2">Edit</a>
+        }
+        <!-- Button to return to the tasks list. The project ID is passed through ViewBag from the controller.-->
+        <a asp-action="GetPTasksList" asp-controller="PTaskAdmin" asp-route-id="@ViewBag.ProjectId" class="btn btn-secondary dr-shadow2">Back to List</a>
+    </div>
+</div>

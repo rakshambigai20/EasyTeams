@@ -1,0 +1,51 @@
+﻿@model IEnumerable<EasyTeams.Data.Models.Domain.Project>
+
+@{
+    ViewData["Title"] = "List of Projects";
+}
+<!-- Renders a list of projects based on logged in manager/admin ,allowing them to add or view tasks specific to each project -->
+<div class="card card-custom">
+    <div class="card-header bg-blue text-white rounded-top">
+        <h4>@ViewData["Title"]</h4>
+    </div>
+    <div class="card-body">
+        <hr />
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        Project Name
+                    </th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    var sortedProjects = Model.OrderBy(p => p.ProjectName);
+                }
+                @foreach (var item in sortedProjects)
+                {
+                        <tr>
+                            <td>
+                            @Html.DisplayFor(modelItem => item.ProjectName)
+                            </td>
+                            <!--Button to get project details-->
+                            <td>
+                                <a asp-action="GetProject" asp-controller="ProjectAdmin" asp-route-id="@item.Id" class="btn btn-inf2">Details</a> 
+                            </td>
+                        <!--Button to add new task-->
+                            <td>
+                                <a asp-action="Create" asp-controller="PTaskAdmin" class="btn btn-outline-secondary dr-shadow2">Add New Task</a> 
+                            </td>
+                        <!--Button to view list of tasks-->
+                            <td>
+                                <a asp-action="GetPTasksList" asp-controller="PTaskAdmin" asp-route-id="@item.Id" class="btn btn-inf3 dr-shadow2">View Tasks</a>
+                            </td>
+                        </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

@@ -1,0 +1,29 @@
+﻿@model int
+
+@{
+    ViewData["Title"] = "Remaining Leave Days";
+}
+<!--View showing only remainig leave days numver-->
+<div class="card card-custom">
+    <div class="card-header bg-blue text-white rounded-top">
+        <h4>@ViewData["Title"]</h4>
+    </div>
+    <div class="card-body">
+        <hr />
+        <div class="row">
+            <div class="col-md-6">
+                <dl class="row">
+                    <dt class="col-sm-4">
+                        Remaining Days
+                    </dt>
+                    <dd class="col-sm-8">
+                        @Model
+                    </dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+    <div class="card-footer rounded-bottom">
+        <a asp-controller="LeaveAdmin" asp-action="GetYourLeave" class="btn btn-secondary">Back to List</a>
+    </div>
+</div>

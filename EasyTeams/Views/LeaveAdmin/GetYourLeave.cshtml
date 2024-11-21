@@ -1,0 +1,182 @@
+﻿@model IList<EasyTeams.Data.Models.Domain.Leave>
+
+@using System.Linq;
+@using EasyTeams.Controllers;
+@{
+    ViewData["Title"] = "Your Leaves";
+    DateOnly today = DateOnly.FromDateTime(DateTime.Now);
+}
+
+<div class="card card-custom">
+    <div class="card-header bg-blue text-white rounded-top">
+        <h4>@ViewData["Title"]</h4>
+    </div>
+    <!--Leave list rendered based on userId-->
+    <div class="card-body">
+        <table class="table">
+            <thead>
+                <tr>
+                    <!--Show number of remaining annual leave-->
+                    <th>Remaining annual leave:</th>
+                    <th>
+                        @ViewBag.remainingLeaveDays
+                        @if (ViewBag.remainingLeaveDays == 1)
+                        {
+                            <text>day</text>
+                        }
+                        else
+                        {
+                            <text>days</text>
+                        }
+                    </th>
+                </tr>
+            </thead>
+        </table>
+        <br />
+        <p>
+            <!--Offer option to request new leave-->
+            <a asp-action="Create" class="btn btn-primary dr-shadow2">Request new leave</a>
+        </p>
+        @{
+            if (Model.Count() == 0)
+            {
+                <p>No leaves have been requested.</p>
+            }
+            else
+            {
+                //Display leaves requested by user. Sort by: Awaiting Authorisation, Authorised, Rejected
+                //Order by StartDate
+                <h5>Awaiting Authorisation</h5>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Request Date</th>
+                            <th>Start Date</th>
+                            <th>End Date</th>
+                            <th>Sick Leave</th>
+                            <th></th><th></th>
+                        </tr>
+                    </thead>
+                    @{
+                        var sortedLeaves = Model.OrderByDescending(l => l.StartDate);
+                    }
+                    <tbody>
+                        @foreach (var item in sortedLeaves)
+                        {
+                            if (item.StartDate.Year == today.Year && item.Authorised == false && item.Rejected == false)
+                            {
+                                <tr>
+                                    <td>@Html.DisplayFor(modelItem => item.RequestDate)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.StartDate)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.EndDate)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.Sick)</td>
+                                    <td>
+                                        <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-inf2">Details</a>
+                                        <!--Leaves awaiting authorisation can be only viewed-->
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+                <h5>Authorised</h5>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Request Date</th>
+                                <th>Start Date</th>
+                                <th>End Date</th>
+                                <th>Authorised</th>
+                                <th>Authorised Date</th>
+                                <th>Sick Leave</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in sortedLeaves)
+                            {
+                                if (item.StartDate.Year == today.Year && item.Authorised == true )
+                                {
+                                <tr>
+                                    <td>@Html.DisplayFor(modelItem => item.RequestDate)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.StartDate)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.EndDate)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.Authorised)</td>
+                                    <td>
+                                        @if (item.AuthorisedDate != DateTime.MinValue)
+                                        {
+                                            @Html.DisplayFor(modelItem => item.AuthorisedDate)
+                                        }
+                                        else
+                                        {
+                                            <text>------</text>
+                                        }
+                                    </td>
+                                    <td>@Html.DisplayFor(modelItem => item.Sick)</td>
+                                    <td>
+                                        <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-inf2">Details</a></td>
+                                       <td> @{
+                                            if (item.Authorised == true && item.StartDate > today)
+                                            {
+                                                //Leave can be cancelled only if it is authorised and the start date is in the future
+                                                <form asp-action="Cancel" asp-route-id="@item.Id">
+                                                    <input type="submit" value="Cancel" class="btn btn-delete" />
+                                                </form>
+                                            }
+                                        }
+                                    </td>
+                                </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+
+                <h5>Rejected</h5>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Request Date</th>
+                            <th>Start Date</th>
+                            <th>End Date</th>
+                            <th>Authorised</th>
+                            <th>Authorised Date</th>
+                            <th>Sick Leave</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in sortedLeaves)
+                        {
+                            //Rejected leaves can be viewed only
+                            if (item.StartDate.Year == today.Year && item.Rejected == true)
+                            {
+                                <tr>
+                                    <td>@Html.DisplayFor(modelItem => item.RequestDate)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.StartDate)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.EndDate)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.Authorised)</td>
+                                    <td>
+                                        @if (item.AuthorisedDate != DateTime.MinValue)
+                                        {
+                                            @Html.DisplayFor(modelItem => item.AuthorisedDate)
+                                        }
+                                        else
+                                        {
+                                            <text>------</text>
+                                        }
+                                    </td>
+                                    <td>@Html.DisplayFor(modelItem => item.Sick)</td>
+                                    <td>
+                                        <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-inf2">Details</a>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            }
+         }
+    </div>
+</div>
+         
+        

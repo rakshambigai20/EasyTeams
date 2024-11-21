@@ -1,0 +1,88 @@
+﻿@model EasyTeams.Data.Models.Domain.PTask
+
+@{
+    ViewData["Title"] = "Task Report";
+}
+<!--Shows task details and report-->
+<div class="card card-custom">
+    <div class="card-header bg-blue text-white rounded-top">
+        <h4>@ViewData["Title"]</h4>
+    </div>
+    <div class="card-body">
+        <hr />
+        <div>
+            <h5>Task Details</h5>
+            <dl class="row">
+                <dt class="col-sm-4">Task ID</dt>
+                <dd class="col-sm-8">@Html.DisplayFor(model => model.Id)</dd>
+
+                <dt class="col-sm-4">Description</dt>
+                <dd class="col-sm-8">@Html.DisplayFor(model => model.Description)</dd>
+
+                <dt class="col-sm-4">Report</dt>
+                <dd class="col-sm-8">
+                    <!-- Editable area for task report, initially read-only. -->
+                    <form id="editTaskForm" asp-controller="Staff" asp-action="SubmitReport" method="post">
+                        @Html.TextAreaFor(model => model.Report, new
+                            {
+                                id = "reportTextArea",
+                                @class = "form-control",
+                                @rows = 5,
+                                @readonly = "readonly",
+                                @style = "background-color: white;" 
+                            })
+                        @Html.HiddenFor(model => model.Id)
+                    </form>
+                </dd>
+            </dl>
+        </div>
+    </div>
+    <div class="card-footer rounded-bottom">
+        @if (User.IsInRole("Staff"))
+        {
+            //Allow staff to edit report if the task is not marked as completed
+            if (!Model.IsFinished)
+            {
+                <button id="editButton" class="btn btn-primary" onclick="toggleEdit()">Edit</button>
+            }
+            <a asp-controller="Staff" asp-action="GetTasks" class="btn btn-secondary dr-shadow">Back to Tasks</a>
+        }
+    </div>
+
+    <div class="d-flex justify-content-end mb-3">
+        @if (User.IsInRole("Admin") || User.IsInRole("Manager"))
+        {
+            if (!Model.IsFinished)
+            {
+                <form asp-controller="PTaskAdmin" asp-action="MarkFinished" asp-route-id="@Model.Id" method="post" style="display: inline-block; margin-right: 10px;">
+                    <button type="submit" class="btn btn-success dr-shadow2">Mark Task As Finished</button>
+                </form>
+                <form asp-controller="PTaskAdmin" asp-action="ReassignTask" asp-route-id="@Model.Id" method="get" style="display: inline-block; margin-right: 10px;">
+                    <button type="submit" class="btn btn-danger dr-shadow2">Reassign Task</button>
+            </form>
+            }
+            <!-- Button to return to the projects list. The project ID is passed through ViewBag from the controller.-->
+            <a asp-action="GetPTasksList" asp-controller="PTaskAdmin" asp-route-id="@ViewBag.ProjectId" class="btn btn-secondary dr-shadow2" style="margin-right: 10px;">Back to Tasks </a>
+        }
+    </div>
+    
+</div>
+
+<script>
+    // function to toggle the report text area between editable and readonly states.
+    function toggleEdit() {
+        var reportTextArea = document.getElementById("reportTextArea");
+        var editButton = document.getElementById("editButton");
+        var form = document.getElementById("editTaskForm");
+        //Check if the textarea is readonly. If it is, enable editing and change the button text to "Save".
+            if (reportTextArea.hasAttribute("readonly")) {
+            reportTextArea.removeAttribute("readonly");
+            editButton.textContent = "Save";
+        } else {
+        // When 'Save' is clicked, set the text area to readonly, change the button text to 'Edit', and submit the form to save changes.
+            reportTextArea.setAttribute("readonly", "readonly");
+            editButton.textContent = "Edit";
+            form.submit(); 
+        }
+    }
+</script>

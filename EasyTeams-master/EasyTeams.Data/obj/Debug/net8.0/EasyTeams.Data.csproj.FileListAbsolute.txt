@@ -1,0 +1,14 @@
+C:\Users\balar\source\repos\EasyTeams-master\EasyTeams-master\EasyTeams.Data\bin\Debug\net8.0\EasyTeams.Data.deps.json
+C:\Users\balar\source\repos\EasyTeams-master\EasyTeams-master\EasyTeams.Data\bin\Debug\net8.0\EasyTeams.Data.runtimeconfig.json
+C:\Users\balar\source\repos\EasyTeams-master\EasyTeams-master\EasyTeams.Data\bin\Debug\net8.0\EasyTeams.Data.dll
+C:\Users\balar\source\repos\EasyTeams-master\EasyTeams-master\EasyTeams.Data\bin\Debug\net8.0\EasyTeams.Data.pdb
+C:\Users\balar\source\repos\EasyTeams-master\EasyTeams-master\EasyTeams.Data\obj\Debug\net8.0\EasyTeams.Data.csproj.AssemblyReference.cache
+C:\Users\balar\source\repos\EasyTeams-master\EasyTeams-master\EasyTeams.Data\obj\Debug\net8.0\EasyTeams.Data.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\balar\source\repos\EasyTeams-master\EasyTeams-master\EasyTeams.Data\obj\Debug\net8.0\EasyTeams.Data.AssemblyInfoInputs.cache
+C:\Users\balar\source\repos\EasyTeams-master\EasyTeams-master\EasyTeams.Data\obj\Debug\net8.0\EasyTeams.Data.AssemblyInfo.cs
+C:\Users\balar\source\repos\EasyTeams-master\EasyTeams-master\EasyTeams.Data\obj\Debug\net8.0\EasyTeams.Data.csproj.CoreCompileInputs.cache
+C:\Users\balar\source\repos\EasyTeams-master\EasyTeams-master\EasyTeams.Data\obj\Debug\net8.0\EasyTeams.Data.dll
+C:\Users\balar\source\repos\EasyTeams-master\EasyTeams-master\EasyTeams.Data\obj\Debug\net8.0\refint\EasyTeams.Data.dll
+C:\Users\balar\source\repos\EasyTeams-master\EasyTeams-master\EasyTeams.Data\obj\Debug\net8.0\EasyTeams.Data.pdb
+C:\Users\balar\source\repos\EasyTeams-master\EasyTeams-master\EasyTeams.Data\obj\Debug\net8.0\EasyTeams.Data.genruntimeconfig.cache
+C:\Users\balar\source\repos\EasyTeams-master\EasyTeams-master\EasyTeams.Data\obj\Debug\net8.0\ref\EasyTeams.Data.dll

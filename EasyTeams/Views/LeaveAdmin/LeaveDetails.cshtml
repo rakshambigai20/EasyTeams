@@ -1,0 +1,76 @@
+﻿@model EasyTeams.Data.Models.Domain.Leave
+
+@{
+    ViewData["Title"] = "Leave Details";
+    @using EasyTeams.Data.Models.Domain;
+    @using EasyTeams.Services.IService;
+    @using EasyTeams.Services.Service;
+    IStaffService staffService = new StaffService();
+    Staff staff = staffService.GetStaff(Model);
+    DateOnly today = DateOnly.FromDateTime(DateTime.Now);
+}
+<!--Leave details for Managers-->
+<div class="card card-custom">
+    <div class="card-header bg-blue text-white rounded-top">
+        <h4>@ViewData["Title"]</h4>
+    </div>
+    <div class="card-body">
+    <dl class="row">
+        <dt class="col-sm-2">
+            Request Date
+        <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.RequestDate)
+        </dd>
+        <dt class="col-sm-2">
+            Start Date
+        </dt>
+        <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.StartDate)
+        </dd>
+        <dt class="col-sm-2">
+            End Date
+        </dt>
+        <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.EndDate)
+        </dd>
+        <dt class="col-sm-2">
+            Authorised
+        </dt>
+        <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Authorised)
+        </dd>
+        <dt class="col-sm-2">
+            Authorised Date
+        </dt>
+        <dd class="col-sm-10">
+                @if (Model.AuthorisedDate != DateTime.MinValue)
+                {
+                    @Html.DisplayFor(model => model.AuthorisedDate)
+                }
+                else
+                {
+                    <text>------</text>
+                }
+        </dd>
+        <dt class="col-sm-2">
+            Sick Leave
+        </dt>
+        <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Sick)
+        </dd>
+    </dl>
+</div>
+    <div class="card-footer rounded-bottom">
+    @{
+        //Manager can approve or reject leave if that leave has not been rejected in the past and the start date is in the future
+        if ((User.IsInRole("Manager") || User.IsInRole("Admin")) && Model.Authorised == false && Model.StartDate > today && Model.Rejected == false)
+        {
+                <a asp-controller="LeaveAdmin" asp-action="ApproveReject" asp-route-id="@Model.Id" class="btn btn-danger dr-shadow2"> Approve or Reject </a> <text> | </text>
+            }
+            if (User.IsInRole("Manager") || User.IsInRole("Admin"))
+            {
+                <a class="btn btn-secondary dr-shadow2" asp-controller="LeaveAdmin" asp-action="Leaves">List of All Leaves</a> <text> | </text>
+            }
+        }
+        <a class="btn btn-secondary dr-shadow2" asp-controller="Staff" asp-action="GetStaff" asp-route-id="@staff.StaffId">Staff Details</a>
+</div>

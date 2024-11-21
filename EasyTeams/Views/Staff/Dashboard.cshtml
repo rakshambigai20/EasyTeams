@@ -1,0 +1,525 @@
+﻿@using EasyTeams.Data.Models.Domain
+@model dynamic
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+@using EasyTeams.Services.IService
+@using EasyTeams.Services.Service
+@{
+    IStaffService staffService = new StaffService();
+    IProjectService projectService = new ProjectService();
+    IPTaskService pTaskService = new PTaskService();
+} 
+@if (User.Identity.IsAuthenticated)
+{
+          
+            <!-- Main Content Area -->
+    <div class="col  p-3" style="min-height: 100vh;">
+
+        <div class="card-body">
+
+                        <!-- Section for Manager and Manager+Admin-->
+            @if (User.IsInRole("Manager") || (User.IsInRole("Manager") && User.IsInRole("Admin")))
+            {
+                var manager = Model as Manager;
+                var staffId = manager.StaffId;
+
+                <!--Top tabs-->
+                <div class="container-fluid">
+                    <div class="row" style="margin-bottom: 20px;">
+                        <div class="col-md-3">
+                            <div class="card" style="border: 2px solid white;">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div class="d-flex align-items-center">
+                                            <div style="background-color: #e0e0e0; padding: 10px; border-radius: 5px; width: 70px; height: 70px; display: flex; align-items: center; justify-content: center;">
+                                                <i class="fa fa-users" style="font-size: 36px;"></i>
+                                            </div>
+                                            <h5 class="mb-0 ms-2">
+                                                @if (User.IsInRole("Manager") && User.IsInRole("Admin"))
+                                                {
+                                                    <text>Staff/Users</text>
+                                                }
+                                                else
+                                                {
+                                                    <text>Staff</text>
+                                                }
+                                            </h5>
+                                            </div>
+
+                                            <a asp-controller="Staff" asp-action="Create" class="btn btn-primary dr-shadow2">Add</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        <div class="col-md-3">
+                            <div class="card" style="border: 2px solid white;">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div class="d-flex align-items-center">
+                                            <div style="background-color: #e0e0e0; padding: 10px; border-radius: 5px; width: 70px; height: 70px; display: flex; align-items: center; justify-content: center;">
+                                                <span style="font-size: 40px; color: #000"><b>@ViewBag.availableStaff</b></span>
+                                            </div>
+                                            <h5 class="mb-0 ms-2">Staff Available Today</h5>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-3">
+                            <div class="card" style="border: 2px solid white;">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div class="d-flex align-items-center">
+                                            <div style="background-color: #e0e0e0; padding: 10px; border-radius: 5px; width: 70px; height: 70px; display: flex; align-items: center; justify-content: center;">
+                                                <span style="font-size: 40px; color: #000"><b>@ViewBag.ongoingProjects</b></span>
+                                            </div>
+                                            <h5 class="mb-0 ms-2">Ongoing Projects</h5>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card" style="border: 2px solid white;">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div class="d-flex align-items-center">
+                                            <div style="background-color: #e0e0e0; padding: 10px; border-radius: 5px; width: 70px; height: 70px; display: flex; align-items: center; justify-content: center;">
+                                                <span style="font-size: 40px; color: #000"><b>@ViewBag.remainingLeaveDays</b></span>
+                                            </div>
+                                            <h5 class="mb-0 ms-2">Remaining Leave</h5>
+                                        </div>
+                                        <a asp-controller="LeaveAdmin" asp-action="Create" class="btn btn-primary dr-shadow2">Request</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <!--Top Tabs if Manager is also admin-->
+                @if (User.IsInRole("Manager") && User.IsInRole("Admin"))
+                {
+                    <div class="col-md-3">
+                        <div class="card" style="border: 2px solid white;">
+                            <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="d-flex align-items-center">
+                                    <div style="background-color: #e0e0e0; padding: 10px; border-radius: 5px; width: 70px; height: 70px; display: flex; align-items: center; justify-content: center;">
+                                        <i class="fa fa-universal-access" style="font-size: 36px;"></i>
+                                    </div>
+                                    <h5 class="mb-0 ms-2">Roles</h5>
+                                </div>
+
+                                <a asp-controller="Admin" asp-action="AddRole" class="btn btn-primary dr-shadow2">Add</a>
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+                }
+                    </div>
+                    <!--End of top tabs-->
+                    <!-- Content for Manager Role in Cards -->
+                    <div class="container-custom">
+                    <div class="card card-custom cont">
+                        <div class="card-header bg-blue text-white rounded-top">
+                            <h4>Staff</h4>
+                        </div>
+                        <div class="card-body">
+                            <a asp-controller="Staff" asp-action="Create" class="list-group-item list-group-item-action">Add New Staff</a>
+                            <a asp-controller="Staff" asp-action="GetMyStaffs" class="list-group-item list-group-item-action">Manage Staff</a>
+                            <a asp-controller="LeaveAdmin" asp-action="Leaves" class="list-group-item list-group-item-action">Manage Staff Leaves</a>
+                            <a asp-controller="Staff" asp-action="LeaveStatistics" class="list-group-item list-group-item-action">Staff Leave Statistics</a>
+                        </div>
+                    </div>
+                    <!--Project Action Table-->
+                    <div class="card card-custom cont">
+                        <div class="card-header bg-blue text-white rounded-top">
+                            <h4>Projects</h4>
+                        </div>
+                        <div class="card-body">
+                            <a asp-controller="ProjectAdmin" asp-action="Create" class="list-group-item list-group-item-action">Add New Project</a>
+                            <a asp-controller="ProjectAdmin" asp-action="GetProjectsList" class="list-group-item list-group-item-action">Manage Projects</a>
+                        </div>
+                    </div>
+                    
+                    <!--Task Action Table-->
+                    <div class="card card-custom cont">
+                        <div class="card-header bg-blue text-white rounded-top">
+                            <h4>Task</h4>
+                        </div>
+                        <div class="card-body">
+                            <a asp-controller="PTaskAdmin" asp-action="Create" class="list-group-item list-group-item-action">Add New Task</a>
+                            <a asp-controller="ProjectAdmin" asp-action="GetProjects" class="list-group-item list-group-item-action">Manage Tasks</a>
+                        </div>
+                    </div>
+                    <div class="card card-custom cont">
+                        <div class="card-header bg-blue text-white rounded-top">
+                            <h4>My Leave</h4>
+                        </div>
+                        <div class="card-body">
+                            <a asp-controller="LeaveAdmin" asp-action="Create" class="list-group-item list-group-item-action">Request Leave</a>
+                            <a asp-controller="LeaveAdmin" asp-action="GetYourLeave" class="list-group-item list-group-item-action">View Leaves</a>
+                        </div>
+                    </div>
+                </div>
+                <!--Additional tabs if Manager is also Admin-->
+                @if (User.IsInRole("Manager") && User.IsInRole("Admin"))
+                {
+                    <div class="container-custom">
+                        <div class="card card-custom cont">
+                            <div class="card-header bg-blue text-white rounded-top">
+                                <h4>Manage Users</h4>
+                            </div>
+                            <div class="card-body">
+                                <a asp-controller="Admin" asp-action="GetUsers" class="list-group-item list-group-item-action">View All Users</a>
+                                <a asp-controller="Admin" asp-action="AddUserToRole" class="list-group-item list-group-item-action">Assign role</a>
+                                <a asp-controller="Admin" asp-action="RemoveUserFromRole" class="list-group-item list-group-item-action">Remove Role</a>
+                            </div>
+                        </div>
+                    </div>
+
+                }
+                <!--Notifications and calendar-->
+                <div class="container-custom" style="justify-content: space-between; align-items: flex-start;">
+                    <!--5 most recent leave requests-->
+                    <div class="container-custom cont">
+                            @if (ViewBag.last5Requests.Count == 0)
+                            {
+                            <div class="card card-custom card-body">
+                                    There is 0 new requests.
+                            </div>
+                            }
+                            else
+                            {
+                                @foreach (var request in ViewBag.last5Requests)
+                                {
+                                    DateOnly requestDate = DateOnly.FromDateTime(request.RequestDate);
+                                    Staff staff = staffService.GetStaff(request);
+                                <div class=" card card-custom card-body" style="height: 35 px; margin-bottom: 5px; position:relative;">
+                                            <div class="container-custom" style="height: 35 px; left: 10px">
+                                                <div>
+                                                    <img src="~/images/important-info.png" alt="Exclamation Mark" width="24px" height="auto">
+                                                </div>
+                                            <div style="margin-left: 10px; color: #8C8C8C;">
+                                                    @staff.FirstName made a @if (request.Sick == false)
+                                                    {
+                                                        <text>annual</text>
+                                                    }
+                                                    else
+                                                    {
+                                                        <text>sick</text>
+                                                    } leave request on @requestDate
+                                                </div>
+                                            </div>
+                                            <div class="container-custom" style="position: absolute; right: 10px; top:10px;">
+                                                <a asp-controller="LeaveAdmin" asp-action="ApproveReject" asp-route-id="@request.Id" class="btn btn-inf2 image-right">Approve Leave</a>
+                                            </div>
+                                        </div>
+                                }
+                            }
+                    </div>
+                    <!--Calendar-->
+                    <div class="card card-custom card-body" style="width: 250px; height: 550px;">
+                        <div id="calendar" style="overflow: hidden; display:flex;">
+                            @Html.Partial("~/Views/Staff/Calendar.cshtml")
+                        </div>
+                    </div>
+
+                </div>
+            }
+   
+                        <!-- Section for Staff -->
+            @if (User.IsInRole("Staff"))
+            {
+                var staff = Model as Staff;
+                <!--Top tabs-->
+                    <div class="container-fluid">
+                        <div class="row" style="margin-bottom: 20px;">
+                            <div class="col-md-3">
+                                <div class="card" style="border: 2px solid white;">
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <div class="d-flex align-items-center">
+                                                <div style="background-color: #e0e0e0; padding: 10px; border-radius: 5px; width: 70px; height: 70px; display: flex; align-items: center; justify-content: center;">
+                                                    <i class="fa fa-tasks" style="font-size: 36px;"></i>
+                                                </div>
+                                                <h5 class="mb-0 ms-2"> Timesheet</h5>
+                                            </div>
+
+                                            <a asp-controller="Staff" asp-action="ViewTimesheet" asp-route-id ="@Model.StaffId" class="btn btn-primary dr-shadow2">View</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        <div class="col-md-3">
+                            <div class="card" style="border: 2px solid white;">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div class="d-flex align-items-center">
+                                            <div style="background-color: #e0e0e0; padding: 10px; border-radius: 5px; width: 70px; height: 70px; display: flex; align-items: center; justify-content: center;">
+                                                <span style="font-size: 40px; color: #000"><b>@ViewBag.remainingLeaveDays</b></span>
+                                            </div>
+                                            <h5 class="mb-0 ms-2">Remaining Leave</h5>
+                                        </div>
+                                        <a asp-controller="LeaveAdmin" asp-action="Create" class="btn btn-primary dr-shadow2">Request</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card" style="border: 2px solid white;">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div class="d-flex align-items-center">
+                                            <div style="background-color: #e0e0e0; padding: 10px; border-radius: 5px; width: 70px; height: 70px; display: flex; align-items: center; justify-content: center;">
+                                                <span style="font-size: 40px; color: #000"><b>@ViewBag.PendingCount</b></span>
+                                            </div>
+                                            <h5 class="mb-0 ms-2">Pending Tasks</h5>
+                                        </div>
+                                        <a asp-controller="PTaskAdmin" asp-action="GetPendingTasks" asp-route-id="@Model.StaffId" class="btn btn-primary dr-shadow2">View</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        </div>
+                    </div>
+
+                <!--Main content-->
+                <div class="container-custom">
+                    <div class="card card-custom cont">
+                        <div class="card-header bg-blue text-white rounded-top">
+                            <h4>Tasks</h4>
+                        </div>
+                        <div class="card-body">
+                            <!-- Use Bootstrap list group to create a clickable table-row format -->
+                            <div class="list-group">
+                                <a asp-controller="staff" asp-action="GetTasks" class="list-group-item list-group-item-action">
+                                    View All Tasks
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card card-custom cont">
+                        <div class="card-header bg-blue text-white rounded-top">
+                            <h4>Leaves</h4>
+                        </div>
+                        <div class="card-body">
+                            <!-- Use Bootstrap list group to create a clickable table-row format -->
+                            <div class="list-group">
+                                <a asp-controller="LeaveAdmin" asp-action="Create" class="list-group-item list-group-item-action">
+                                    Request Leave
+                                </a>
+                                <a asp-controller="LeaveAdmin" asp-action="GetYourLeave" class="list-group-item list-group-item-action">
+                                    View Leave Status
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--Notifications and calendar-->
+                <div class="container-custom" style="justify-content: space-between; align-items: flex-start;">
+                    <!--5 pending tasks notifications-->
+                    <div class="container-custom cont">
+                        @if (ViewBag.first5PendingTasks.Count == 0)
+                        {
+                            <div class="card card-custom card-body">
+                                There is 0 pending tasks.
+                            </div>
+                        }
+                        else
+                        {
+                            @foreach (PTask pTask in ViewBag.first5PendingTasks)
+                            {
+                                Project project = projectService.GetProject(pTask);
+                                <div class="card card-custom card-body" style="height: 70px; margin-bottom: 5px; position: relative; width: 100%;">
+                                    <div class="container-custom" style="display: flex; align-items: center; left: 10px;">
+                                        <div>
+                                            <img src="~/images/important-info.png" alt="Exclamation Mark" width="24px" height="auto">
+                                        </div>
+                                        <div style="margin-left: 10px; color: #8C8C8C;">
+                                            You have a pending task in @project.ProjectName due on @pTask.Date
+                                        </div>
+                                    </div>
+                                    <div class="container-custom" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%)">
+                                        <a asp-controller="Staff" asp-action="SubmitReport" asp-route-id="@pTask.Id" class="btn btn-inf2 image-right">Submit Report</a>
+                                    </div>
+                                </div>
+                            }
+                        }
+                      
+                    </div>
+
+                    <!-- Right Side: Calendar -->
+                    <div class="card card-custom card-body" style="width: 250px; height: 550px;">
+                        <div id="calendar" style="overflow: hidden; display:flex;">
+                                @Html.Partial("~/Views/Staff/Calendar.cshtml")
+                            </div>
+                    </div>
+                </div>
+
+
+            }
+
+            <!--Only Admin Section-->
+            @if (User.IsInRole("Admin") && !User.IsInRole("Manager"))
+                        {
+                            var staff = Model as Manager;
+                          
+                            <div>
+
+                                <!--Main Content-->
+                               
+                            <!--Top tabs-->
+                                <div class="row" style="margin-bottom: 20px;">
+                                    <div class="col-md-3">
+                                        <div class="card" style="border: 2px solid white;">
+                                            <div class="card-body">
+                                                <div class="d-flex justify-content-between align-items-center">
+                                                    <div class="d-flex align-items-center">
+                                                        <div style="background-color: #e0e0e0; padding: 10px; border-radius: 5px; width: 70px; height: 70px; display: flex; align-items: center; justify-content: center;">
+                                                            <i class="fa fa-users" style="font-size: 36px;"></i>
+                                                        </div>
+                                                        <h5 class="mb-0 ms-2">Users</h5>
+                                                    </div>
+
+                                                    <a asp-controller="Staff" asp-action="Create" class="btn btn-primary dr-shadow2">Add</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                        <div class="col-md-3">
+                            <div class="card" style="border: 2px solid white;">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div class="d-flex align-items-center">
+                                            <div style="background-color: #e0e0e0; padding: 10px; border-radius: 5px; width: 70px; height: 70px; display: flex; align-items: center; justify-content: center;">
+                                                <span style="font-size: 40px; color: #000"><b>@ViewBag.availableStaff</b></span>
+                                            </div>
+                                            <h5 class="mb-0 ms-2">Staff Available Today</h5>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                                    <div class="col-md-3">
+                                            <div class="card" style="border: 2px solid white;">
+                                                <div class="card-body">
+                                                    <div class="d-flex justify-content-between align-items-center">
+                                                        <div class="d-flex align-items-center">
+                                                            <div style="background-color: #e0e0e0; padding: 10px; border-radius: 5px; width: 70px; height: 70px; display: flex; align-items: center; justify-content: center;">
+                                                                <i class="fa fa-universal-access" style="font-size: 36px;"></i>
+                                                            </div>
+                                                            <h5 class="mb-0 ms-2">Roles</h5>
+                                                        </div>
+
+                                                        <a asp-controller="Admin" asp-action="AddRole" class="btn btn-primary dr-shadow2">Add</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                    </div>
+                        <div class="col-md-3">
+                            <div class="card" style="border: 2px solid white;">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div class="d-flex align-items-center">
+                                            <div style="background-color: #e0e0e0; padding: 10px; border-radius: 5px; width: 70px; height: 70px; display: flex; align-items: center; justify-content: center;">
+                                                <span style="font-size: 40px; color: #000"><b>@ViewBag.remainingLeaveDays</b></span>
+                                            </div>
+                                            <h5 class="mb-0 ms-2">Remaining Leave</h5>
+                                        </div>
+                                        <a asp-controller="LeaveAdmin" asp-action="Create" class="btn btn-primary dr-shadow2">Request</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                                </div>
+                            </div>
+
+                                   
+                    <!--Main tabs-->
+                                    <!--Tasks-->
+
+                <div class="container-custom">
+                    <div class="card card-custom cont">
+                        <div class="card-header bg-blue text-white rounded-top">
+                            <h4>Manage Users</h4>
+                        </div>
+                        <div class="card-body">
+                            <a asp-controller="Admin" asp-action="GetUsers" class="list-group-item list-group-item-action">View All Users</a>
+                            <a asp-controller="Admin" asp-action="AddUserToRole" class="list-group-item list-group-item-action">Assign role</a>
+                            <a asp-controller="Admin" asp-action="RemoveUserFromRole" class="list-group-item list-group-item-action">Remove Role</a>
+                        </div>
+                    </div>
+                    <!--Leaves-->
+                    <div class="card card-custom cont">
+                        <div class="card-header bg-blue text-white rounded-top">
+                            <h4>Leaves</h4>
+                        </div>
+                        <div class="card-body">
+                            <a asp-controller="LeaveAdmin" asp-action="Leaves" class="list-group-item list-group-item-action">Manage Leaves</a>
+                            <a asp-controller="staff" asp-action="LeaveStatistics" class="list-group-item list-group-item-action">Leave Statistics</a>
+                            <a asp-controller="LeaveAdmin" asp-action="GetYourLeave" class="list-group-item list-group-item-action">My Leaves</a>
+                        </div>
+                    </div>
+                </div>
+                <!--Notifications and calendar-->
+                                <div class="container-custom" style="justify-content: space-between; align-items: flex-start;">
+                    <div class="container-custom cont">
+                        <!--5 most recent leave requests-->
+                            @if (ViewBag.last5Requests.Count == 0)
+                            {
+                            <div class="card card-custom card-body">
+                                    There is 0 new requests.
+                            </div>
+                            }
+                            else
+                            {
+                                @foreach (var request in ViewBag.last5Requests)
+                                {
+                                    DateOnly requestDate = DateOnly.FromDateTime(request.RequestDate);
+                                    Staff manager = staffService.GetStaff(request);
+                                <div class=" card card-custom card-body" style="height: 35 px; margin-bottom: 5px; position:relative;">
+                                            <div class="container-custom" style="height: 35 px; left: 10px">
+                                                <div>
+                                                    <img src="~/images/important-info.png" alt="Exclamation Mark" width="24px" height="auto">
+                                                </div>
+                                            <div style="margin-left: 10px; color: #8C8C8C;">
+                                                    @manager.FirstName made a @if (request.Sick == false)
+                                                    {
+                                                        <text>sick</text>
+                                                    }
+                                                    else
+                                                    {
+                                                        <text>annual</text>
+                                                    } leave request on @requestDate
+                                                </div>
+                                            </div>
+                                            <div class="container-custom" style="position: absolute; right: 10px; top:10px;">
+                                                <a asp-controller="LeaveAdmin" asp-action="ApproveReject" asp-route-id="@request.Id" class="btn btn-inf2 image-right">Approve Leave</a>
+                                            </div>
+                                        </div>
+                                }
+                            }
+                    </div>
+                    <!--Calendar-->
+                    <div class="card card-custom card-body" style="width: 250px; height: 550px;">
+                        <div id="calendar" style="overflow: hidden; display:flex;">
+                            @Html.Partial("~/Views/Staff/Calendar.cshtml")
+                        </div>
+                    </div>
+
+                </div>
+
+           }
+
+        </div>
+    
+    
+    </div>
+      
+}
