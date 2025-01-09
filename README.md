@@ -23,7 +23,7 @@ This is a Web application developed as part of my academic project during my Mas
    ![image](https://github.com/user-attachments/assets/d20abd89-9a1d-41b7-9033-1edb1316bf03)
 
 2. **Staff Page**  
-   - Manage staff details (view, add, edit).  
+   - Manage staff details (view, add).  
 
    ![image](https://github.com/user-attachments/assets/9ecdbe82-e926-4558-856c-3cc44f35b7e4)
    
@@ -105,8 +105,6 @@ This is a Web application developed as part of my academic project during my Mas
    - View tasks.  
    - Submit reports after completing a task.  
    - Edit reports.  
-
-   ![staff dashboard](https://github.com/user-attachments/assets/e5cf782a-f880-456e-bafc-8aa2bbbf159b)
    
    ![View tasks](https://github.com/user-attachments/assets/93adc5bb-9582-41ec-be35-d63ba505f7d0)
     
