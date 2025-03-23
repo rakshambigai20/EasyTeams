@@ -24,6 +24,8 @@ namespace EasyTeams.Data
                 base.OnConfiguring(builder);
             }
         }
-        public DbSet<EasyTeams.Data.Models.Domain.PTask> PTask { get; set; } = default!;
+       // public DbSet<EasyTeams.Data.Models.Domain.PTask> PTask { get; set; } = default!;
+       
+
     }
 }

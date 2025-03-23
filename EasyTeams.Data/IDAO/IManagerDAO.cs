@@ -25,5 +25,7 @@ namespace EasyTeams.Data.IDAO
         void AddToCollection(Staff staff, string managerId, EasyTeamsContext context);
         Manager GetManager(Project project, EasyTeamsContext context);
         int AvailableStaff(string managerId, EasyTeamsContext context);
+
+        void AddAdmin(Manager manager, EasyTeamsContext context);
     }
 }

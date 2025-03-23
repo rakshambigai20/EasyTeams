@@ -13,8 +13,8 @@
         <section>
         <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post">
                 <h3>
-                    Register New Staff @if (User.IsInRole("Admin"))
-                    { <text>or Manager</text> }
+                    Register New Staff @* @if (User.IsInRole("Admin"))
+                    { <text>or Manager</text> } *@
                 </h3>
             <hr />
             <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
@@ -25,13 +25,18 @@
                         <input class="form-check-input" type="radio" id="registerStaff" name="Input.Register" value="RegisterStaff" checked />
                         <label class="form-check-label" for="registerStaff">Staff</label>
                     </div>
-                    @if (User.IsInRole("Admin"))
-                    {
+                   @*  @if (User.IsInRole("Admin")) *@
+                    @* { *@
                         <div class="form-check">
                             <input class="form-check-input" type="radio" id="registerManager" name="Input.Register" value="RegisterManager">
                             <label class="form-check-label" for="registerManager">Manager</label>
                         </div>
-                    }
+                    @* } *@
+
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" id="registerManager" name="Input.Register" value="RegisterAdmin">
+                        <label class="form-check-label" for="registerAdmin">Admin</label>
+                    </div>
                 </div>
             <div class="form-floating mb-3">
                 <input asp-for="Input.FirstName" class="form-control" aria-required="true" placeholder="First Name"/>

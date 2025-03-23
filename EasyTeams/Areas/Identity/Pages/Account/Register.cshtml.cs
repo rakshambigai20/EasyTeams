@@ -24,7 +24,7 @@ using EasyTeams.Services.Service;
 
 namespace EasyTeams.Areas.Identity.Pages.Account
 {
-    [Authorize(Roles = "Admin, Manager")]
+    //[Authorize(Roles = "Admin, Manager")]
     public class RegisterModel : PageModel
     {
         private readonly SignInManager<IdentityUser> _signInManager;
@@ -155,6 +155,20 @@ namespace EasyTeams.Areas.Identity.Pages.Account
                     managerService = new ManagerService();
                     managerService.AddManager(manager, currentUserId);
                 }
+
+                if (Input.Register == "RegisterAdmin")
+                {
+                    Manager manager = new Manager();
+                    manager.StaffId = user.Id;
+                    manager.FirstName = Input.FirstName;
+                    manager.LastName = Input.LastName;
+                    manager.WorkEmail = Input.Email;
+                    manager.PhoneNumber = Input.PhoneNumber;
+                    manager.Address = Input.Address;
+                    managerService = new ManagerService();
+                    //managerService.AddManager(manager, currentUserId);
+                    managerService.AddAdmin(manager);
+                }
                 if (result.Succeeded)
                 {
                     if (Input.Register == "RegisterStaff")
@@ -164,6 +178,10 @@ namespace EasyTeams.Areas.Identity.Pages.Account
                     if (Input.Register == "RegisterManager")
                     {
                         await _userManager.AddToRoleAsync(user, "Manager");
+                    }
+                    if (Input.Register == "RegisterAdmin")
+                    {
+                        await _userManager.AddToRoleAsync(user, "Admin");
                     }
 
                     _logger.LogInformation("User created a new account with password.");

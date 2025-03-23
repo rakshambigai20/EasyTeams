@@ -9,6 +9,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EasyTeams.Data", "EasyTeams
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EasyTeams.Services", "EasyTeams.Services\EasyTeams.Services.csproj", "{1FB4D1C3-3654-4129-B151-BB6C285783C4}"
 EndProject
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{AAD6F9C9-79BA-47FE-9A8C-A199626E5086}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{1FB4D1C3-3654-4129-B151-BB6C285783C4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1FB4D1C3-3654-4129-B151-BB6C285783C4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1FB4D1C3-3654-4129-B151-BB6C285783C4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AAD6F9C9-79BA-47FE-9A8C-A199626E5086}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AAD6F9C9-79BA-47FE-9A8C-A199626E5086}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AAD6F9C9-79BA-47FE-9A8C-A199626E5086}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AAD6F9C9-79BA-47FE-9A8C-A199626E5086}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

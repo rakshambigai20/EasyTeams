@@ -21,5 +21,6 @@ namespace EasyTeams.Services.IService
         Manager GetManager(Leave leave);
         void AddManager(Manager manager, string adminId);
         int AvailableStaff(string managerId);
+        void AddAdmin(Manager manager);
     }
 }

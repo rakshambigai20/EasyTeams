@@ -1,0 +1,7 @@
+services:
+  easyteams:
+    container_name: easyteams
+    image: ${DOCKER_REGISTRY-}easyteams
+    build:
+      context: .
+      dockerfile: EasyTeams/Dockerfile

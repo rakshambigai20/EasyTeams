@@ -82,6 +82,15 @@ namespace EasyTeams.Services.Service
             }
         }
 
+        public void AddAdmin(Manager manager)
+        {
+            using (EasyTeamsContext context = new EasyTeamsContext())
+            {
+                managerDAO.AddAdmin(manager, context);
+                context.SaveChanges();
+            }
+        }
+
         //Calculate available staff from Manager's collection (Staff not on leave)
         public int AvailableStaff(string managerId)
         {

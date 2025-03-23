@@ -1,6 +1,6 @@
 ﻿using EasyTeams.Data.DAO;
 using EasyTeams.Data.IDAO;
-using EasyTeams.Data.Migrations;
+//using EasyTeams.Data.Migrations;
 using EasyTeams.Data.Models.Domain;
 using EasyTeams.Data.Models.Repository;
 using EasyTeams.Services.IService;

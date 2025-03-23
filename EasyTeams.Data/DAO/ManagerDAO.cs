@@ -94,6 +94,12 @@ namespace EasyTeams.Data.DAO
             m.Staffs.Add(manager);
             context.SaveChanges();
         }
+
+        public void AddAdmin(Manager manager, EasyTeamsContext context)
+        {
+            context.Managers.Add(manager);
+            context.SaveChanges();
+        }
         public void AddToCollection(Staff staff, string managerId, EasyTeamsContext context)
         {
             Manager manager = GetManager(managerId, context);
