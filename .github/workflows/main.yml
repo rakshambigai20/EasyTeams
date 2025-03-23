@@ -6,6 +6,10 @@ on:
     branches:
       - main
 
+env:
+  AZURE_WEB_APP_NAME: EasyTeams
+  AZURE_WEB_APP_PACKAGE_PATH: "./publish"
+
 jobs:
   publish:
     runs-on: ubuntu-latest
@@ -26,4 +30,11 @@ jobs:
         run: dotnet build ./EasyTeams.sln --configuration Release --no-restore
 
       - name: Publish
-        run: dotnet publish ./EasyTeams.sln --configuration Release --no-build
+        run: dotnet publish ./EasyTeams.sln --configuration Release --no-build --output '${{env.AZURE_WEB_APP_PACKAGE_PATH}}'
+
+       -name: Deployment
+       uses: azure/webapps-deploy@v2
+       with:
+         app-name: ${{env.AZURE_WEB_APP_NAME}}
+         publish-profile:$${{SECRETS.AZURE_PUBLISH_PROFILE}} 
+         package: ${{env.AZURE_WEB_APP_PACKAGE_PATH}}
