@@ -4,14 +4,6 @@ This is a Web application developed as part of my academic project during my Mas
 
 ---
 
-## Table of Contents
-- [Application Features And Screenshots](#application-features-and-screenshots)
-- [Installation](#installation)
-- [Clone the Repository](#clone-the-repository)
-- [Steps to Run the Application](#steps-to-run-the-application)
-
----
-
 ## Application Features and Screenshots
 
 ### Manager Features
@@ -166,56 +158,11 @@ This is a Web application developed as part of my academic project during my Mas
   - Displays bank holidays and leaves for all users.  
   - Shows project deadlines on the manager dashboard.
 
----
-
-## Installation
-
-1. [Download Visual Studio](https://visualstudio.microsoft.com/).
-2. During installation, select the **ASP.Net and Web Development** workload.
-3. Install SQL Server or SQL Server Express for database management.
-4. Download SQL Server Management Studio (SSMS) for database administration.
+  
+![image](https://github.com/user-attachments/assets/d20abd89-9a1d-41b7-9033-1edb1316bf03)
 
 ---
 
-## Clone the Repository
 
-Clone the repository using the following command:  
-git clone https://github.com/rakshambigai20/EasyTeams.git
-
-
----
-
-## Steps to Run the Application
-
-1. Configure the Database
-   - Open the appsettings.json file.
-   - Update the connection string under the <connectionStrings> section to point to your local SQL Server instance.
-
-2. Run Entity Framework Migrations
-   - Navigate to Tools > NuGet Package Manager > Package Manager Console in Visual Studio.
-   - Run the following command to create tables and seed data in the database:
-     Update-Database
-
-3. Build the Solution
-   - In Visual Studio, go to Build > Build Solution or press Ctrl + Shift + B.
-   - Ensure the build is successful without errors.
-
-4. Run the Application
-   - Press F5 or navigate to Debug > Start Debugging in Visual Studio.
-   - The application will launch in your default browser with a URL like:
-     http://localhost:7142/
-
-5. Verify Application Functionality
-   - Use the following credentials for login:
-
-     - Manager Login:
-     Username: mo@mo.com
-     Password: Passw0rd!
-
-     - Staff Login:
-     Username: rb@rb.com
-     Password: Passw0rd!
-
-     - Admin Login:
      Username: admin@admin.com
      Password: Passw0rd!
