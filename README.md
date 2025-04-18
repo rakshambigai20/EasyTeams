@@ -164,5 +164,4 @@ This is a Web application developed as part of my academic project during my Mas
 ---
 
 
-     Username: admin@admin.com
-     Password: Passw0rd!
+    
